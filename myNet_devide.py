@@ -65,23 +65,49 @@ test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
 # 	# psedu code
 # 	return result_layer
 
+class _SkipLinkLayer(nn.Sequential):
 
-# def slidedImage(data, size=4, stride=4):
-# 	d = []
-# 	batch = data.size()[0]
-# 	num_filter = data.size()[1]
-# 	loop_size = int((data.size()[2] - size) / stride) + 1
-# 	loop_size2 = int((data.size()[3] - size) / stride) + 1
-# 	for i in range(loop_size): # 2
-# 		for j in range(loop_size2): # 3  
-# 			d.append(data[:,:,j*stride : size+j*stride , i*stride : size+i*stride])
-# 	c = []
-# 	for item in d:
-# 		c.append(item.contiguous().view(batch, num_filter, 1, -1))
-		
-# 	return torch.cat(c,2)
+    def __init__(self, num_input_features, growth_rate, bn_size, drop_rate):
+        super(_SkipLinkLayer, self).__init__()
 
+        self.features = nn.Sequential(
+            nn.BatchNorm2d(num_input_features),
+            nn.ReLU(),
+            nn.Conv2d(num_input_features, bn_size *
+                        growth_rate, kernel_size=1, stride=1, bias=False),
 
+            nn.BatchNorm2d(bn_size * growth_rate),
+            nn.ReLU(),
+            nn.Conv2d(bn_size * growth_rate, growth_rate,
+                     kernel_size=3, stride=1, padding=1, bias=False),
+        )
+        self.features2 = nn.Sequential(
+            nn.BatchNorm2d(growth_rate),
+            nn.ReLU(),
+            nn.Conv2d(growth_rate, bn_size *
+                        growth_rate, kernel_size=1, stride=1, bias=False),
+
+            nn.BatchNorm2d(bn_size * growth_rate),
+            nn.ReLU(),
+            nn.Conv2d(bn_size * growth_rate, growth_rate,
+                     kernel_size=3, stride=1, padding=1, bias=False),
+        )
+        self.drop_rate = drop_rate
+        
+
+    def forward(self, x):
+        # x <= randomly drop layer by layer(must understand feature map structure[growth_rate, bn_size??, num_input_features])
+
+        # but when it comes to Transition, [num_output_features=num_features // 2] it devide into 2
+        # then input feature become last output's half and then may cannot be dropout_layer by layer if feature map size is 32 
+        # it comes to 16, 
+        f_x = self.features(x)
+        if self.drop_rate > 0:
+            f_x = F.dropout(f_x, p=self.drop_rate, training=self.training)
+        g_x = self.features2(f_x)
+        if self.drop_rate > 0:
+            g_x = F.dropout(g_x, p=self.drop_rate, training=self.training)
+        return torch.cat([x, f_x, g_x], 1)
 
 class _DenseLayer(nn.Sequential):
     def __init__(self, num_input_features, growth_rate, bn_size, drop_rate):
@@ -112,9 +138,28 @@ class _DenseLayer(nn.Sequential):
 class _DenseBlock(nn.Sequential):
     def __init__(self, num_layers, num_input_features, bn_size, growth_rate, drop_rate):
         super(_DenseBlock, self).__init__()
-        for i in range(num_layers):
-            layer = _DenseLayer(num_input_features + i * growth_rate, growth_rate, bn_size, drop_rate)
-            self.add_module('denselayer%d' % (i + 1), layer)
+
+        # num_input_features, growth_rate, bn_size, drop_rate
+        jump_layer = _SkipLinkLayer(num_input_features, growth_rate, bn_size, drop_rate)
+        self.add_module('jumplayer1_2', jump_layer)
+
+        layer3 = _DenseLayer(num_input_features + 2 * growth_rate, growth_rate, bn_size, drop_rate)
+        self.add_module('denselayer%d' % (3), layer3)
+
+        layer4 = _DenseLayer(num_input_features + 3 * growth_rate, growth_rate, bn_size, drop_rate)
+        self.add_module('denselayer%d' % (4), layer4)
+
+        layer5 = _DenseLayer(num_input_features + 4 * growth_rate, growth_rate, bn_size, drop_rate)
+        self.add_module('denselayer%d' % (5), layer5)
+
+        layer6 = _DenseLayer(num_input_features + 5 * growth_rate, growth_rate, bn_size, drop_rate)
+        self.add_module('denselayer%d' % (6), layer6)
+
+
+
+        # for i in range(num_layers):
+        #     layer = _DenseLayer(num_input_features + i * growth_rate, growth_rate, bn_size, drop_rate)
+        #     self.add_module('denselayer%d' % (i + 1), layer)
 
 
 class _Transition(nn.Sequential):
@@ -190,51 +235,6 @@ class DenseNet(nn.Module):
 
         return out
 
-
-
-
-
-# class Vgg(nn.Module):
-# 	def __init__(self, num_classes=10):
-# 		super(Vgg, self).__init__()
-
-# 		self.features = nn.Sequential(
-# 			nn.Conv2d(3, 64, kernel_size=3, padding=1),
-# 			nn.BatchNorm2d(64),
-# 			nn.ReLU(),
-# 			nn.Conv2d(64, 64, kernel_size=3, padding = 1),
-# 			nn.BatchNorm2d(64),
-# 			nn.ReLU(),
-
-# 			)
-# 		self.LSTM = nn.LSTM(16, 8, num_layers = 2, batch_first = True, bidirectional = True)
-# 		self.features2 = nn.Sequential (
-# 			nn.Conv2d(256, 128, kernel_size=3, padding=1),
-# 			nn.BatchNorm2d(128),
-# 			nn.ReLU(),
-# 			nn.Conv2d(128, 64, kernel_size=3, padding = 1),
-# 			nn.BatchNorm2d(64),
-# 			nn.ReLU(),
-# 			nn.MaxPool2d(kernel_size=2, stride=2),
-# 		)
-# 		self.classifier = nn.Linear(128*4*2*4, num_classes)
-
-# 	def forward(self, x):
-# 		x = self.features(x)
-# 		x = slidedImage(x)
-# 		x = x.view(x.size(0)*x.size(1)*8, 8, 16)
-# 		h = Variable(torch.zeros(4,x.size(0), 8).cuda())
-# 		c = Variable(torch.zeros(4,x.size(0), 8).cuda())
-# 		x, (h1,c1) = self.LSTM(x, (h , c))
-# 		x = x.contiguous().view(x.size(0)//64//8, x.size(1)*32, 16,16) 
-# 		x = self.features2(x)
-# 		x = x.view(x.size(0), -1)
-# 		# x.size()=[batch_size, channel, width, height]
-# 		#      [128, 512, 2, 2]
-# 		# flatten 결과 => [128, 512x2x2]
-# 		x = self.classifier(x)
-# 		x = F.dropout2d(x, p = 0.5, training = self.training)
-# 		return x
 
 
 model = DenseNet()

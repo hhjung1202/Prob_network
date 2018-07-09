@@ -141,7 +141,7 @@ class DenseNet(nn.Module):
         num_classes (int) - number of classification classes
     """
 
-    def __init__(self, growth_rate=12, block_config=(6,),
+    def __init__(self, growth_rate=12, block_config=(6,6),
                  num_init_features=16, bn_size=4, drop_rate=0, num_classes=10):
 
         super(DenseNet, self).__init__()
@@ -170,7 +170,7 @@ class DenseNet(nn.Module):
         self.features.add_module('norm5', nn.BatchNorm2d(num_features))
 
         # Linear layer
-        self.classifier = nn.Linear(17248, num_classes)
+        self.classifier = nn.Linear(4176, num_classes)
 
         # Official init from torch repo.
         for m in self.modules():
