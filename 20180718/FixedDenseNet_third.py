@@ -54,67 +54,147 @@ test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
 										  batch_size=batch_size,
 										  shuffle=False,  #
 										  num_workers=4)
-# def prob_selNet(prev_Layer, Upper_Layer_arr, percentage):
-# 	max_size = len(Upper_Layer_arr)
-# 	active_size = int(max_size * percentage)
-# 	active_indices = sorted(random.sample(range(0,max_size), active_size), reverse=True)
-
-# 	result_layer = Upper_Layer_arr[active_indices]
 
 
-# 	# psedu code
-# 	return result_layer
+class _FixedDenseLayer(nn.Sequential):
 
-
-# def slidedImage(data, size=4, stride=4):
-# 	d = []
-# 	batch = data.size()[0]
-# 	num_filter = data.size()[1]
-# 	loop_size = int((data.size()[2] - size) / stride) + 1
-# 	loop_size2 = int((data.size()[3] - size) / stride) + 1
-# 	for i in range(loop_size): # 2
-# 		for j in range(loop_size2): # 3  
-# 			d.append(data[:,:,j*stride : size+j*stride , i*stride : size+i*stride])
-# 	c = []
-# 	for item in d:
-# 		c.append(item.contiguous().view(batch, num_filter, 1, -1))
-		
-# 	return torch.cat(c,2)
-
-
-
-class _DenseLayer(nn.Sequential):
     def __init__(self, num_input_features, growth_rate, bn_size, drop_rate):
-        super(_DenseLayer, self).__init__()
-        self.add_module('norm1', nn.BatchNorm2d(num_input_features)),
-        self.add_module('relu1', nn.ReLU(inplace=True)),
-        self.add_module('conv1', nn.Conv2d(num_input_features, bn_size *
-                        growth_rate, kernel_size=1, stride=1, bias=False)),
-        self.add_module('norm2', nn.BatchNorm2d(bn_size * growth_rate)),
-        self.add_module('relu2', nn.ReLU(inplace=True)),
-        self.add_module('conv2', nn.Conv2d(bn_size * growth_rate, growth_rate,
-                        kernel_size=3, stride=1, padding=1, bias=False)),
+        super(_FixedDenseLayer, self).__init__()
+
+        self.num_layer = 6
         self.drop_rate = drop_rate
 
+        self.feature0 = nn.Sequential(
+                nn.BatchNorm2d(num_input_features),
+                nn.ReLU(),
+                nn.Conv2d(num_input_features, bn_size *
+                            growth_rate, kernel_size=1, stride=1, bias=False),
+
+                nn.BatchNorm2d(bn_size * growth_rate),
+                nn.ReLU(),
+                nn.Conv2d(bn_size * growth_rate, growth_rate,
+                         kernel_size=3, stride=1, padding=1, bias=False),
+            )
+        self.feature1 = nn.Sequential(
+                nn.BatchNorm2d(num_input_features + 1 * growth_rate),
+                nn.ReLU(),
+                nn.Conv2d(num_input_features + 1 * growth_rate, bn_size *
+                            growth_rate, kernel_size=1, stride=1, bias=False),
+
+                nn.BatchNorm2d(bn_size * growth_rate),
+                nn.ReLU(),
+                nn.Conv2d(bn_size * growth_rate, growth_rate,
+                         kernel_size=3, stride=1, padding=1, bias=False),
+            )
+        self.feature2 = nn.Sequential(
+                nn.BatchNorm2d(num_input_features + 2 * growth_rate),
+                nn.ReLU(),
+                nn.Conv2d(num_input_features + 2 * growth_rate, bn_size *
+                            growth_rate, kernel_size=1, stride=1, bias=False),
+
+                nn.BatchNorm2d(bn_size * growth_rate),
+                nn.ReLU(),
+                nn.Conv2d(bn_size * growth_rate, growth_rate,
+                         kernel_size=3, stride=1, padding=1, bias=False),
+            )
+        self.feature3 = nn.Sequential(
+                nn.BatchNorm2d(num_input_features + 3 * growth_rate),
+                nn.ReLU(),
+                nn.Conv2d(num_input_features + 3 * growth_rate, bn_size *
+                            growth_rate, kernel_size=1, stride=1, bias=False),
+
+                nn.BatchNorm2d(bn_size * growth_rate),
+                nn.ReLU(),
+                nn.Conv2d(bn_size * growth_rate, growth_rate,
+                         kernel_size=3, stride=1, padding=1, bias=False),
+            )
+        self.feature4 = nn.Sequential(
+                nn.BatchNorm2d(4 * growth_rate),
+                nn.ReLU(),
+                nn.Conv2d(4 * growth_rate, bn_size *
+                            growth_rate, kernel_size=1, stride=1, bias=False),
+
+                nn.BatchNorm2d(bn_size * growth_rate),
+                nn.ReLU(),
+                nn.Conv2d(bn_size * growth_rate, growth_rate,
+                         kernel_size=3, stride=1, padding=1, bias=False),
+            )
+        
+        self.feature_next = nn.Sequential(
+                nn.BatchNorm2d(6 * growth_rate),
+                nn.ReLU(),
+                nn.Conv2d(6 * growth_rate, bn_size *
+                            growth_rate, kernel_size=1, stride=1, bias=False),
+
+                nn.BatchNorm2d(bn_size * growth_rate),
+                nn.ReLU(),
+                nn.Conv2d(bn_size * growth_rate, growth_rate,
+                         kernel_size=3, stride=1, padding=1, bias=False),
+            )
+
+        # self.transition = nn.Sequential(
+        #         nn.BatchNorm2d(4 * growth_rate),
+        #         nn.ReLU(),
+        #         nn.Conv2d(4 * growth_rate, growth_rate,
+        #                  kernel_size=1, stride=1, bias=False),
+        #         nn.AvgPool2d(kernel_size=2, stride=2),
+        #     )
+        # self.compress = nn.Sequential(
+        #         nn.BatchNorm2d(growth_rate),
+        #         nn.ReLU(inplace=True),
+        #         nn.Conv2d(growth_rate, growth_rate, kernel_size=1, bias=False),
+        #         nn.MaxPool2d(kernel_size=2, stride=2),
+        #     )
+        # self.compress2 = nn.Sequential(
+        #         nn.BatchNorm2d(growth_rate),
+        #         nn.ReLU(inplace=True),
+        #         nn.Conv2d(growth_rate, bn_size *
+        #                     growth_rate, kernel_size=1, stride=1, bias=False),
+
+        #         nn.BatchNorm2d(bn_size * growth_rate),
+        #         nn.ReLU(),
+        #         nn.Conv2d(bn_size * growth_rate, growth_rate,
+        #                  kernel_size=3, stride=1, padding=1, bias=False),
+        #         nn.AvgPool2d(kernel_size=2, stride=2),
+        #     )
+        
+        
     def forward(self, x):
-        # x <= randomly drop layer by layer(must understand feature map structure[growth_rate, bn_size??, num_input_features])
+        
+        # prob_selNet(prev_Layer, Upper_Layer_arr, percentage, training)
 
-        # but when it comes to Transition, [num_output_features=num_features // 2] it devide into 2
-        # then input feature become last output's half and then may cannot be dropout_layer by layer if feature map size is 32 
-        # it comes to 16, 
+        f_x = self.feature0(x)
+        g_x = self.feature1(torch.cat([x, f_x], 1))
+        h_x = self.feature2(torch.cat([x, f_x, g_x], 1))
+        i_x = self.feature3(torch.cat([x, f_x, g_x, h_x], 1))
+        j_x = self.feature4(torch.cat([f_x, g_x, h_x, i_x], 1))
+        k_x = self.feature4(torch.cat([g_x, h_x, i_x, j_x], 1))
 
-        new_features = super(_DenseLayer, self).forward(x)
-        if self.drop_rate > 0:
-            new_features = F.dropout(new_features, p=self.drop_rate, training=self.training)
-        return torch.cat([x, new_features], 1)
+        # x2 = self.transition(torch.cat([h_x, i_x, j_x, k_x], 1))
 
+        # f_x_c = self.compress2(f_x)
+        # g_x_c = self.compress2(g_x)
+        # h_x_c = self.compress2(h_x)
+        # i_x_c = self.compress2(i_x)
+        # j_x_c = self.compress2(j_x)
+        # k_x_c = self.compress2(k_x)
+
+        a_x = self.feature_next(torch.cat([f_x, g_x, h_x, i_x, j_x, k_x], 1))
+        b_x = self.feature_next(torch.cat([g_x, h_x, i_x, j_x, k_x, a_x], 1))
+        c_x = self.feature_next(torch.cat([h_x, i_x, j_x, k_x, a_x, b_x], 1))
+        d_x = self.feature_next(torch.cat([i_x, j_x, k_x, a_x, b_x, c_x], 1))
+        e_x = self.feature_next(torch.cat([j_x, k_x, a_x, b_x, c_x, d_x], 1))
+        m_x = self.feature_next(torch.cat([k_x, a_x, b_x, c_x, d_x, e_x], 1))
+        n_x = self.feature_next(torch.cat([a_x, b_x, c_x, d_x, e_x, m_x], 1))
+
+        return torch.cat([b_x, c_x, d_x, e_x, m_x, n_x], 1)
 
 class _DenseBlock(nn.Sequential):
     def __init__(self, num_layers, num_input_features, bn_size, growth_rate, drop_rate):
         super(_DenseBlock, self).__init__()
-        for i in range(num_layers):
-            layer = _DenseLayer(num_input_features + i * growth_rate, growth_rate, bn_size, drop_rate)
-            self.add_module('denselayer%d' % (i + 1), layer)
+
+        layer = _FixedDenseLayer(num_input_features, growth_rate, bn_size, drop_rate)
+        self.add_module('fixedDenseLayer%d' % (i + 1), layer)
 
 
 class _Transition(nn.Sequential):
@@ -141,8 +221,7 @@ class DenseNet(nn.Module):
         num_classes (int) - number of classification classes
     """
 
-    def __init__(self, growth_rate=16, block_config=(6,6),
-                 num_init_features=16, bn_size=4, drop_rate=0, num_classes=10):
+    def __init__(self, growth_rate=16, num_init_features=16, bn_size=4, drop_rate=0, num_classes=10):
 
         super(DenseNet, self).__init__()
 
@@ -156,21 +235,16 @@ class DenseNet(nn.Module):
 
         # Each denseblock
         num_features = num_init_features
-        for i, num_layers in enumerate(block_config):
-            block = _DenseBlock(num_layers=num_layers, num_input_features=num_features,
-                                bn_size=bn_size, growth_rate=growth_rate, drop_rate=drop_rate)
-            self.features.add_module('denseblock%d' % (i + 1), block)
-            num_features = num_features + num_layers * growth_rate
-            if i != len(block_config) - 1:
-                trans = _Transition(num_input_features=num_features, num_output_features=num_features // 2)
-                self.features.add_module('transition%d' % (i + 1), trans)
-                num_features = num_features // 2
+        
+        layer = _FixedDenseLayer(num_features, growth_rate, bn_size, drop_rate)
+        
+        self.features.add_module('fixedDenseLayer1', layer)
 
+        num_features = 6 * growth_rate
         # Final batch norm
         self.features.add_module('norm5', nn.BatchNorm2d(num_features))
-
         # Linear layer
-        self.classifier = nn.Linear(5472, num_classes)
+        self.classifier = nn.Linear(18816, num_classes)
 
         # Official init from torch repo.
         for m in self.modules():
@@ -190,51 +264,6 @@ class DenseNet(nn.Module):
 
         return out
 
-
-
-
-
-# class Vgg(nn.Module):
-# 	def __init__(self, num_classes=10):
-# 		super(Vgg, self).__init__()
-
-# 		self.features = nn.Sequential(
-# 			nn.Conv2d(3, 64, kernel_size=3, padding=1),
-# 			nn.BatchNorm2d(64),
-# 			nn.ReLU(),
-# 			nn.Conv2d(64, 64, kernel_size=3, padding = 1),
-# 			nn.BatchNorm2d(64),
-# 			nn.ReLU(),
-
-# 			)
-# 		self.LSTM = nn.LSTM(16, 8, num_layers = 2, batch_first = True, bidirectional = True)
-# 		self.features2 = nn.Sequential (
-# 			nn.Conv2d(256, 128, kernel_size=3, padding=1),
-# 			nn.BatchNorm2d(128),
-# 			nn.ReLU(),
-# 			nn.Conv2d(128, 64, kernel_size=3, padding = 1),
-# 			nn.BatchNorm2d(64),
-# 			nn.ReLU(),
-# 			nn.MaxPool2d(kernel_size=2, stride=2),
-# 		)
-# 		self.classifier = nn.Linear(128*4*2*4, num_classes)
-
-# 	def forward(self, x):
-# 		x = self.features(x)
-# 		x = slidedImage(x)
-# 		x = x.view(x.size(0)*x.size(1)*8, 8, 16)
-# 		h = Variable(torch.zeros(4,x.size(0), 8).cuda())
-# 		c = Variable(torch.zeros(4,x.size(0), 8).cuda())
-# 		x, (h1,c1) = self.LSTM(x, (h , c))
-# 		x = x.contiguous().view(x.size(0)//64//8, x.size(1)*32, 16,16) 
-# 		x = self.features2(x)
-# 		x = x.view(x.size(0), -1)
-# 		# x.size()=[batch_size, channel, width, height]
-# 		#      [128, 512, 2, 2]
-# 		# flatten 결과 => [128, 512x2x2]
-# 		x = self.classifier(x)
-# 		x = F.dropout2d(x, p = 0.5, training = self.training)
-# 		return x
 
 
 model = DenseNet()

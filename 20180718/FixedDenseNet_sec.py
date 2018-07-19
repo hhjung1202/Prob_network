@@ -63,7 +63,6 @@ class _FixedDenseLayer(nn.Sequential):
 
         self.num_layer = 6
         self.drop_rate = drop_rate
-        self.half_init_num = (num_input_features + 4 * growth_rate) // 2
 
         self.feature0 = nn.Sequential(
                 nn.BatchNorm2d(num_input_features),
@@ -122,17 +121,6 @@ class _FixedDenseLayer(nn.Sequential):
             )
         
         self.feature_next = nn.Sequential(
-                nn.BatchNorm2d(self.half_init_num + 5 * growth_rate),
-                nn.ReLU(),
-                nn.Conv2d(self.half_init_num + 5 * growth_rate, bn_size *
-                            growth_rate, kernel_size=1, stride=1, bias=False),
-
-                nn.BatchNorm2d(bn_size * growth_rate),
-                nn.ReLU(),
-                nn.Conv2d(bn_size * growth_rate, growth_rate,
-                         kernel_size=3, stride=1, padding=1, bias=False),
-            )
-        self.feature_next_non_input = nn.Sequential(
                 nn.BatchNorm2d(6 * growth_rate),
                 nn.ReLU(),
                 nn.Conv2d(6 * growth_rate, bn_size *
@@ -147,7 +135,7 @@ class _FixedDenseLayer(nn.Sequential):
         self.transition = nn.Sequential(
                 nn.BatchNorm2d(4 * growth_rate),
                 nn.ReLU(),
-                nn.Conv2d(4 * growth_rate, self.half_init_num,
+                nn.Conv2d(4 * growth_rate, growth_rate,
                          kernel_size=1, stride=1, bias=False),
                 nn.AvgPool2d(kernel_size=2, stride=2),
             )
@@ -158,7 +146,6 @@ class _FixedDenseLayer(nn.Sequential):
                 nn.MaxPool2d(kernel_size=2, stride=2),
             )
         self.compress2 = nn.Sequential(
-                nn.AvgPool2d(kernel_size=2, stride=2),
                 nn.BatchNorm2d(growth_rate),
                 nn.ReLU(inplace=True),
                 nn.Conv2d(growth_rate, bn_size *
@@ -168,7 +155,7 @@ class _FixedDenseLayer(nn.Sequential):
                 nn.ReLU(),
                 nn.Conv2d(bn_size * growth_rate, growth_rate,
                          kernel_size=3, stride=1, padding=1, bias=False),
-                
+                nn.AvgPool2d(kernel_size=2, stride=2),
             )
         
         
@@ -253,11 +240,11 @@ class DenseNet(nn.Module):
         
         self.features.add_module('fixedDenseLayer1', layer)
 
-        num_features = (num_init_features + 4 * growth_rate) // 2 + 7 * 12
+        num_features = 6 * growth_rate
         # Final batch norm
         self.features.add_module('norm5', nn.BatchNorm2d(num_features))
         # Linear layer
-        self.classifier = nn.Linear(3744, num_classes)
+        self.classifier = nn.Linear(3456, num_classes)
 
         # Official init from torch repo.
         for m in self.modules():
