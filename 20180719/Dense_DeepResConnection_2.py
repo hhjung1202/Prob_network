@@ -97,17 +97,22 @@ class _Transition(nn.Sequential):
 
         self.norm = nn.BatchNorm2d(num_input_features)
         self.relu = nn.ReLU(inplace=True)
-        self.conv = nn.Conv2d(num_input_features, num_output_features,
+        self.conv = nn.Conv2d(num_input_features, num_input_features * 2,
                                           kernel_size=1, stride=1, bias=False)
         self.pool = nn.AvgPool2d(kernel_size=2, stride=2)
         
         self.downsample = nn.Sequential(
-            nn.Conv2d(num_input_features, num_output_features,
+            nn.Conv2d(num_input_features, num_input_features * 2,
                       kernel_size=1, stride=2, bias=False),
+            nn.BatchNorm2d(num_input_features * 2),
+        )
+        self.downsample2 = nn.Sequential(
+            nn.Conv2d(num_input_features * 2, num_output_features,
+                      kernel_size=1, stride=1, bias=False),
             nn.BatchNorm2d(num_output_features),
         )
 
-        self.conv1 = conv3x3(num_output_features, num_output_features)
+        self.conv1 = conv3x3(num_input_features * 2, num_output_features)
         self.bn1 = nn.BatchNorm2d(num_output_features)
         self.conv2 = conv3x3(num_output_features, num_output_features)
         self.bn2 = nn.BatchNorm2d(num_output_features)
@@ -124,16 +129,26 @@ class _Transition(nn.Sequential):
         out += residual
         out = self.relu(out)
 
-        for i in range(2):
-            residual = out
-            out = self.conv1(out)
-            out = self.bn1(out)
-            out = self.relu(out)
+        residual = out
+        residual = self.downsample2(residual)
+        out = self.conv1(out)
+        out = self.bn1(out)
+        out = self.relu(out)
 
-            out = self.conv2(out)
-            out = self.bn2(out)
-            out += residual
-            out = self.relu(out)
+        out = self.conv2(out)
+        out = self.bn2(out)
+        out += residual
+        out = self.relu(out)
+
+        residual = out
+        out = self.conv2(out)
+        out = self.bn1(out)
+        out = self.relu(out)
+
+        out = self.conv2(out)
+        out = self.bn2(out)
+        out += residual
+        out = self.relu(out)
 
         return out
 
