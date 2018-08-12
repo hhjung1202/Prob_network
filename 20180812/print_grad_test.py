@@ -51,7 +51,7 @@ class _Gate(nn.Sequential):
     def __init__(self):
         super(_Gate, self).__init__()
         self.x = torch.tensor([1.], requires_grad=False)
-        self.weight = torch.tensor([0.], requires_grad=False)
+        self.weight = torch.tensor([0.])
         self.sig = nn.Sigmoid()
     def forward(self, x):
 
