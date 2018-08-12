@@ -137,7 +137,7 @@ for t in range(500):
     # Tensors, but we do not need to keep references to intermediate values since
     # we are not implementing the backward pass by hand.
     
-    optimizer = optim.Adam(filter(lambda p: p.requires_grad,model.parameters()), lr=learning_rate, weight_decay=1e-4)
+    optimizer = optim.Adam(filter(lambda p: p.requires_grad,model.parameters()), lr=learning_rate) #, weight_decay=1e-4)
 
     
 
