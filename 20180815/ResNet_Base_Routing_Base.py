@@ -318,8 +318,50 @@ init_learning(model.module)
 
 print(model)
 
-for epoch in range(0, 165):
-    
+
+def save_checkpoint(state, filename):
+
+    model_dir = 'drive/app/torch/save_models'
+    model_filename = os.path.join(model_dir, filename)
+    latest_filename = os.path.join(model_dir, 'latest.txt')
+
+    if not os.path.exists(model_dir):
+        os.makedirs(model_dir)
+
+    with open(latest_filename, 'w') as fout:
+        fout.write(model_filename)
+
+    torch.save(state, model_filename)
+    print("=> saving checkpoint '{}'".format(model_filename))
+
+    return
+
+def load_checkpoint():
+
+    model_dir = 'drive/app/torch/save_models'
+    latest_filename = os.path.join(model_dir, 'latest.txt')
+    if os.path.exists(latest_filename):
+        with open(latest_filename, 'r') as fin:
+            model_filename = fin.readlines()[0]
+    else:
+        return None
+    print("=> loading checkpoint '{}'".format(model_filename))
+    state = torch.load(model_filename)
+
+    return state
+
+
+start_epoch = 0
+
+checkpoint = load_checkpoint()
+if not checkpoint:
+    pass
+else:
+    start_epoch = checkpoint['epoch'] + 1
+    model.load_state_dict(checkpoint['state_dict'])
+    optimizer.load_state_dict(checkpoint['optimizer'])
+
+for epoch in range(start_epoch, 165):
 
     if epoch < 80:
         learning_rate = learning_rate
@@ -330,14 +372,21 @@ for epoch in range(0, 165):
     for param_group in optimizer.param_groups:
         param_group['learning_rate'] = learning_rate
 
-
-
     train(epoch)
-    test()  # Did not know when is it good performance.
 
-    if epoch % 2 == 1:
+    if epoch % 5 == 0:
+        model_filename = 'checkpoint_%03d.pth.tar' % epoch
+        save_checkpoint({
+            'epoch': epoch,
+            'model': model,
+            'state_dict': model.state_dict(),
+            'optimizer': optimizer.state_dict(),
+        }, model_filename)
+
+    test()  
+
+    if epoch % 3 == 2:
         switching_learning(model.module) # 2 2 2
-
 
 model_weight_printing(module.module)
 def model_weight_printing(model):
@@ -352,17 +401,15 @@ def model_weight_printing(model):
 def percentage_print(model):
     if is_leaf(model):
         if hasattr(model, 'weight'):
-            model.weight.requires_grad = False
-            print('False', model)
+            print(model.weight)
         return
 
     for child in model.children():
         if is_leaf(child):
             if hasattr(child, 'weight'):
-                child.weight.requires_grad = False
-                print('False', child)
+                print(model.weight)
         else:
-            turn_off_learning(child)
+            percentage_print(child)
 
 
 now = time.gmtime(time.time() - start_time)
