@@ -18,6 +18,8 @@ start_time = time.time()
 batch_size = 128
 learning_rate = 0.001
 
+p_decay = torch.tensor([])
+p_decay_rate = 1e-4
 transform_train = transforms.Compose([
     transforms.RandomCrop(32, padding=4),  # augmentation performance upgrade 7~8%
     transforms.RandomHorizontalFlip(),  # right and left reverse
@@ -115,36 +117,6 @@ def switching_learning(model):
             switching_learning(child)
 
 
-# from torch.nn.parameter import Parameter
-
-
-# class Linear(Module):
-
-#     def __init__(self, in_features, out_features, bias=True):
-#         super(Linear, self).__init__()
-#         self.in_features = in_features
-#         self.out_features = out_features
-#         self.weight = Parameter(torch.Tensor(out_features, in_features))
-#         if bias:
-#             self.bias = Parameter(torch.Tensor(out_features))
-#         else:
-#             self.register_parameter('bias', None)
-#         self.reset_parameters()
-
-#     def reset_parameters(self):
-#         stdv = 1. / math.sqrt(self.weight.size(1))
-#         self.weight.data.uniform_(-stdv, stdv)
-#         if self.bias is not None:
-#             self.bias.data.uniform_(-stdv, stdv)
-
-#     def forward(self, input):
-#         return F.linear(input, self.weight, self.bias)
-
-#     def extra_repr(self):
-#         return 'in_features={}, out_features={}, bias={}'.format(
-#             self.in_features, self.out_features, self.bias is not None
-#         )
-
 class _Gate(nn.Sequential):
     phase = 2
     def __init__(self):
@@ -166,10 +138,8 @@ class BasicBlock(nn.Module):
         super(BasicBlock, self).__init__()
         self.conv1 = nn.Conv2d(in_planes, planes, kernel_size=3, stride=stride, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(planes)
-        self.conv2 = nn.Conv2d(planes, planes, kernel_size=3, stride=1, padding=1, bias=False)
-        self.bn2 = nn.BatchNorm2d(planes)
 
-        self.gate1 = _Gate()
+        self.gate = _Gate()
 
         self.shortcut = nn.Sequential()
         if stride != 1 or in_planes != self.expansion*planes:
@@ -180,11 +150,9 @@ class BasicBlock(nn.Module):
 
     def forward(self, x):
         out = F.relu(self.bn1(self.conv1(x)))
-        out = self.bn2(self.conv2(out))
-        p = self.gate1(x)
-
+        p = self.gate(x)
         out = out * p + self.shortcut(x) * (1-p)
-
+        p_decay = torch.cat([p_decay,p],0)
         out = F.relu(out)
         return out
 
@@ -223,7 +191,10 @@ class ResNet(nn.Module):
 
 
 model = ResNet(BasicBlock, [2, 2, 2, 2])
-optimizer = optim.Adam(model.parameters(), lr=learning_rate, weight_decay=1e-4)
+optimizer = optim.SGD(model.parameters(), learning_rate,
+                                momentum=0.9,
+                                weight_decay=1e-4,
+                                nesterov=True)
 criterion = nn.CrossEntropyLoss().cuda()
 
 if torch.cuda.device_count() > 0:
@@ -253,6 +224,11 @@ def train(epoch):
         optimizer.zero_grad()
         output = model(data)  # 32x32x3 -> 10*128 right? like PCA
         loss = criterion(output, target)
+        
+        # loss2 = p_decay.size()[0] - (p_decay.pow(2).sum() + (1-p_decay).pow(2).sum())
+        # loss2 = loss2 * p_decay_rate
+        # loss = loss + loss2
+        
         loss.backward()
         optimizer.step()
 
@@ -350,6 +326,31 @@ def load_checkpoint():
 
     return state
 
+def model_weight_printing(model):
+    for child in model.children():
+        if hasattr(child, 'phase'):
+            percentage_print(child)
+        elif is_leaf(child):
+            continue
+        else:
+            init_learning(child)
+
+def sigmoid(x):
+    return 1 / (1 + math.exp(-x))
+
+def percentage_print(model):
+    if is_leaf(model):
+        if hasattr(model, 'weight'):
+            print(model, sigmoid(model.weight))
+        return
+
+    for child in model.children():
+        if is_leaf(child):
+            if hasattr(child, 'weight'):
+                print(child, sigmoid(child.weight))
+        else:
+            percentage_print(child)
+
 
 start_epoch = 0
 
@@ -384,32 +385,12 @@ for epoch in range(start_epoch, 165):
         }, model_filename)
 
     test()  
+    model_weight_printing(module.module)
 
     if epoch % 3 == 2:
         switching_learning(model.module) # 2 2 2
 
-model_weight_printing(module.module)
-def model_weight_printing(model):
-    for child in model.children():
-        if hasattr(child, 'phase'):
-            percentage_print(child)
-        elif is_leaf(child):
-            continue
-        else:
-            init_learning(child)
-
-def percentage_print(model):
-    if is_leaf(model):
-        if hasattr(model, 'weight'):
-            print(model.weight)
-        return
-
-    for child in model.children():
-        if is_leaf(child):
-            if hasattr(child, 'weight'):
-                print(model.weight)
-        else:
-            percentage_print(child)
+# model_weight_printing(module.module)
 
 
 now = time.gmtime(time.time() - start_time)

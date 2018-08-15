@@ -115,7 +115,6 @@ def switching_learning(model):
             switching_learning(child)
 
 
-
 class _Gate(nn.Sequential):
     phase = 2
     def __init__(self):
@@ -137,10 +136,8 @@ class BasicBlock(nn.Module):
         super(BasicBlock, self).__init__()
         self.conv1 = nn.Conv2d(in_planes, planes, kernel_size=3, stride=stride, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(planes)
-        self.conv2 = nn.Conv2d(planes, planes, kernel_size=3, stride=1, padding=1, bias=False)
-        self.bn2 = nn.BatchNorm2d(planes)
 
-        self.gate1 = _Gate()
+        self.gate = _Gate()
 
         self.shortcut = nn.Sequential()
         if stride != 1 or in_planes != self.expansion*planes:
@@ -151,11 +148,8 @@ class BasicBlock(nn.Module):
 
     def forward(self, x):
         out = F.relu(self.bn1(self.conv1(x)))
-        out = self.bn2(self.conv2(out))
-        p = self.gate1(x)
-
+        p = self.gate(x)
         out = out * p + self.shortcut(x) * (1-p)
-
         out = F.relu(out)
         return out
 
@@ -194,7 +188,12 @@ class ResNet(nn.Module):
 
 
 model = ResNet(BasicBlock, [2, 2, 2, 2])
-optimizer = optim.Adam(model.parameters(), lr=learning_rate, weight_decay=1e-4)
+
+optimizer = optim.SGD(model.parameters(), learning_rate,
+                                momentum=0.9,
+                                weight_decay=1e-4,
+                                nesterov=True)
+
 criterion = nn.CrossEntropyLoss().cuda()
 
 if torch.cuda.device_count() > 0:
@@ -289,8 +288,75 @@ init_learning(model.module)
 
 print(model)
 
-for epoch in range(0, 165):
-    
+
+def save_checkpoint(state, filename):
+
+    model_dir = 'drive/app/torch/save_models'
+    model_filename = os.path.join(model_dir, filename)
+    latest_filename = os.path.join(model_dir, 'latest.txt')
+
+    if not os.path.exists(model_dir):
+        os.makedirs(model_dir)
+
+    with open(latest_filename, 'w') as fout:
+        fout.write(model_filename)
+
+    torch.save(state, model_filename)
+    print("=> saving checkpoint '{}'".format(model_filename))
+
+    return
+
+def load_checkpoint():
+
+    model_dir = 'drive/app/torch/save_models'
+    latest_filename = os.path.join(model_dir, 'latest.txt')
+    if os.path.exists(latest_filename):
+        with open(latest_filename, 'r') as fin:
+            model_filename = fin.readlines()[0]
+    else:
+        return None
+    print("=> loading checkpoint '{}'".format(model_filename))
+    state = torch.load(model_filename)
+
+    return state
+
+def model_weight_printing(model):
+    for child in model.children():
+        if hasattr(child, 'phase'):
+            percentage_print(child)
+        elif is_leaf(child):
+            continue
+        else:
+            init_learning(child)
+
+def sigmoid(x):
+    return 1 / (1 + math.exp(-x))
+
+def percentage_print(model):
+    if is_leaf(model):
+        if hasattr(model, 'weight'):
+            print(model, sigmoid(model.weight))
+        return
+
+    for child in model.children():
+        if is_leaf(child):
+            if hasattr(child, 'weight'):
+                print(child, sigmoid(child.weight))
+        else:
+            percentage_print(child)
+
+
+start_epoch = 0
+
+checkpoint = load_checkpoint()
+if not checkpoint:
+    pass
+else:
+    start_epoch = checkpoint['epoch'] + 1
+    model.load_state_dict(checkpoint['state_dict'])
+    optimizer.load_state_dict(checkpoint['optimizer'])
+
+for epoch in range(start_epoch, 165):
 
     if epoch < 80:
         learning_rate = learning_rate
@@ -301,39 +367,24 @@ for epoch in range(0, 165):
     for param_group in optimizer.param_groups:
         param_group['learning_rate'] = learning_rate
 
-
-
     train(epoch)
-    test()  # Did not know when is it good performance.
 
-    if epoch % 2 == 1:
+    if epoch % 5 == 0:
+        model_filename = 'checkpoint_%03d.pth.tar' % epoch
+        save_checkpoint({
+            'epoch': epoch,
+            'model': model,
+            'state_dict': model.state_dict(),
+            'optimizer': optimizer.state_dict(),
+        }, model_filename)
+
+    test()  
+    model_weight_printing(module.module)
+
+    if epoch % 3 == 2:
         switching_learning(model.module) # 2 2 2
 
-
-model_weight_printing(module.module)
-def model_weight_printing(model):
-    for child in model.children():
-        if hasattr(child, 'phase'):
-            percentage_print(child)
-        elif is_leaf(child):
-            continue
-        else:
-            init_learning(child)
-
-def percentage_print(model):
-    if is_leaf(model):
-        if hasattr(model, 'weight'):
-            model.weight.requires_grad = False
-            print('False', model)
-        return
-
-    for child in model.children():
-        if is_leaf(child):
-            if hasattr(child, 'weight'):
-                child.weight.requires_grad = False
-                print('False', child)
-        else:
-            turn_off_learning(child)
+# model_weight_printing(module.module)
 
 
 now = time.gmtime(time.time() - start_time)
