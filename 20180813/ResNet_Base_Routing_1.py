@@ -67,9 +67,6 @@ def init_learning(model):
     for child in model.children():
         if hasattr(child, 'phase'):
             turn_off_learning(child)
-            child.weight.requires_grad = False
-
-            print('False', child)
         elif is_leaf(child):
             if hasattr(child, 'weight'):
                 child.weight.requires_grad = True
@@ -81,12 +78,14 @@ def turn_off_learning(model):
     if is_leaf(model):
         if hasattr(model, 'weight'):
             model.weight.requires_grad = False
+            print('False', model)
         return
 
     for child in model.children():
         if is_leaf(child):
             if hasattr(child, 'weight'):
                 child.weight.requires_grad = False
+                print('False', child)
         else:
             turn_off_learning(child)
 
@@ -115,16 +114,48 @@ def switching_learning(model):
         else:
             switching_learning(child)
 
+
+# from torch.nn.parameter import Parameter
+
+
+# class Linear(Module):
+
+#     def __init__(self, in_features, out_features, bias=True):
+#         super(Linear, self).__init__()
+#         self.in_features = in_features
+#         self.out_features = out_features
+#         self.weight = Parameter(torch.Tensor(out_features, in_features))
+#         if bias:
+#             self.bias = Parameter(torch.Tensor(out_features))
+#         else:
+#             self.register_parameter('bias', None)
+#         self.reset_parameters()
+
+#     def reset_parameters(self):
+#         stdv = 1. / math.sqrt(self.weight.size(1))
+#         self.weight.data.uniform_(-stdv, stdv)
+#         if self.bias is not None:
+#             self.bias.data.uniform_(-stdv, stdv)
+
+#     def forward(self, input):
+#         return F.linear(input, self.weight, self.bias)
+
+#     def extra_repr(self):
+#         return 'in_features={}, out_features={}, bias={}'.format(
+#             self.in_features, self.out_features, self.bias is not None
+#         )
+
 class _Gate(nn.Sequential):
     phase = 2
     def __init__(self):
         super(_Gate, self).__init__()
-        self.x = torch.tensor([1.], requires_grad=False, device='cuda:0')
-        self.weight = torch.tensor([0.], requires_grad=False, device='cuda:0')
+        self.one = torch.tensor([1.], requires_grad=False, device='cuda:0')
+        self.fc = nn.Linear(1, 1, bias=False)
+        self.fc.weight.data.fill_(0.)
         self.sig = nn.Sigmoid()
     def forward(self, x):
-
-        p = self.sig(self.x * self.weight)
+        one = self.fc(self.one)
+        p = self.sig(one)
         return p
 
 
@@ -274,11 +305,11 @@ def test():
         print('conv1_weight_grad',model.module.conv1.weight.grad)
         print()
 
-    print('percentage_weight',model.module.layer1[0].gate1.weight)
+    print('percentage_weight',model.module.layer1[0].gate1.fc.weight)
     print()
 
-    if hasattr(model.module.layer1[0].gate1.weight, 'grad'):
-        print('percentage_weight_grad',model.module.layer1[0].gate1.weight.grad)
+    if hasattr(model.module.layer1[0].gate1.fc.weight, 'grad'):
+        print('percentage_weight_grad',model.module.layer1[0].gate1.fc.weight.grad)
         print()
     
 
@@ -288,8 +319,7 @@ init_learning(model.module)
 print(model)
 
 for epoch in range(0, 165):
-    if epoch % 2 == 1:
-        switching_learning(model.module)
+    
 
     if epoch < 80:
         learning_rate = learning_rate
@@ -305,8 +335,84 @@ for epoch in range(0, 165):
     train(epoch)
     test()  # Did not know when is it good performance.
 
+    if epoch % 2 == 1:
+        switching_learning(model.module) # 2 2 2
 
 
+model_weight_printing(module.module)
+def model_weight_printing(model):
+    for child in model.children():
+        if hasattr(child, 'phase'):
+            percentage_print(child)
+        elif is_leaf(child):
+            continue
+        else:
+            init_learning(child)
+
+def percentage_print(model):
+    if is_leaf(model):
+        if hasattr(model, 'weight'):
+            model.weight.requires_grad = False
+            print('False', model)
+        return
+
+    for child in model.children():
+        if is_leaf(child):
+            if hasattr(child, 'weight'):
+                child.weight.requires_grad = False
+                print('False', child)
+        else:
+            turn_off_learning(child)
+# def init_learning(model):
+#     for child in model.children():
+#         if hasattr(child, 'phase'):
+#             turn_off_learning(child)
+#         elif is_leaf(child):
+#             if hasattr(child, 'weight'):
+#                 child.weight.requires_grad = True
+#                 print('True', child)
+#         else:
+#             init_learning(child)
+
+# def turn_off_learning(model):
+#     if is_leaf(model):
+#         if hasattr(model, 'weight'):
+#             model.weight.requires_grad = False
+#             print('False', model)
+#         return
+
+#     for child in model.children():
+#         if is_leaf(child):
+#             if hasattr(child, 'weight'):
+#                 child.weight.requires_grad = False
+#                 print('False', child)
+#         else:
+#             turn_off_learning(child)
+
+
+# def switching_learning(model):
+#     if is_leaf(model):
+#         if hasattr(model, 'weight'):
+#             if model.weight.requires_grad:
+#                 model.weight.requires_grad = False
+#                 print('False', model)
+#             else:
+#                 model.weight.requires_grad = True
+#                 print('True', model)
+#         return
+    
+#     for child in model.children():
+
+#         if is_leaf(child):
+#             if hasattr(child, 'weight'):
+#                 if child.weight.requires_grad:
+#                     child.weight.requires_grad = False
+#                     print('False', child)
+#                 else:
+#                     child.weight.requires_grad = True
+#                     print('True', child)
+#         else:
+#             switching_learning(child)
 
 now = time.gmtime(time.time() - start_time)
 print('{} hours {} mins {} secs for training'.format(now.tm_hour, now.tm_min, now.tm_sec))
