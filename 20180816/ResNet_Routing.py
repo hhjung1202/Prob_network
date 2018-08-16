@@ -264,7 +264,6 @@ init_learning(model.module)
 
 # print(model)
 
-
 def save_checkpoint(state, filename):
 
     model_dir = 'drive/app/torch/save_models'
