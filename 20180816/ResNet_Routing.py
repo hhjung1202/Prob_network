@@ -125,8 +125,8 @@ class _Gate(nn.Sequential):
         self.sig = nn.Sigmoid()
     def forward(self, x):
         one = self.fc(self.one)
-        p = self.sig(one)
-        return p
+        self.p = self.sig(one)
+        return self.p
 
 
 class BasicBlock(nn.Module):
@@ -260,33 +260,9 @@ def test():
           .format(test_loss / (batch_idx + 1), 100. * correct / total, correct, total))
 
 
-    # for m in model._modules:
-    #    # print('index', m)
-
-    #    child = model._modules[m]
-    #    print('child', child)
-
-
-    print('conv1',model.module.conv1)
-    print()
-    print('conv1_weight',model.module.conv1.weight)
-    print()
-    if hasattr(model.module.conv1.weight, 'grad'):
-        print('conv1_weight_grad',model.module.conv1.weight.grad)
-        print()
-
-    print('percentage_weight',model.module.layer1[0].gate.fc.weight)
-    print()
-
-    if hasattr(model.module.layer1[0].gate.fc.weight, 'grad'):
-        print('percentage_weight_grad',model.module.layer1[0].gate.fc.weight.grad)
-        print()
-    
-
-
 init_learning(model.module)
 
-print(model)
+# print(model)
 
 
 def save_checkpoint(state, filename):
@@ -320,30 +296,14 @@ def load_checkpoint():
 
     return state
 
-def model_weight_printing(model):
+def routing_weight_printing(model):
     for child in model.children():
         if hasattr(child, 'phase'):
-            percentage_print(child)
+            print('percent', child.p.data)
         elif is_leaf(child):
             continue
         else:
-            model_weight_printing(child)
-
-def sigmoid(x):
-    return 1 / (1 + math.exp(-x))
-
-def percentage_print(model):
-    if is_leaf(model):
-        if hasattr(model, 'weight'):
-            print(model, sigmoid(model.weight))
-        return
-
-    for child in model.children():
-        if is_leaf(child):
-            if hasattr(child, 'weight'):
-                print(child, sigmoid(child.weight))
-        else:
-            percentage_print(child)
+            routing_weight_printing(child)
 
 
 start_epoch = 0
@@ -379,12 +339,12 @@ for epoch in range(start_epoch, 165):
         }, model_filename)
 
     test()  
-    model_weight_printing(model.module)
+    routing_weight_printing(model.module)
 
     if epoch % 3 == 2:
         switching_learning(model.module) # 2 2 2
 
-# model_weight_printing(module.module)
+# routing_weight_printing(module.module)
 
 
 now = time.gmtime(time.time() - start_time)
