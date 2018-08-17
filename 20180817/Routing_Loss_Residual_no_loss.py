@@ -162,8 +162,8 @@ class BasicBlock(nn.Module):
         p = self.gate(x)
         out = out * (1-p) + self.shortcut(x) * p
         
-        if is_state.check_is_phase2() and not is_state.check_is_test():
-            p_decay = torch.cat([p_decay,p],0)
+        # if is_state.check_is_phase2() and not is_state.check_is_test():
+        #     p_decay = torch.cat([p_decay,p],0)
 
         out = F.relu(out)
         return out
@@ -237,13 +237,13 @@ def train(epoch):
         output = model(data)  # 32x32x3 -> 10*128 right? like PCA
         loss = criterion(output, target)
         
-        if is_state.check_is_phase2():
-            loss2 = p_decay.size()[0] - p_decay.pow(2).sum()
-            loss2 = loss2 * p_decay_rate
+        # if is_state.check_is_phase2():
+        #     loss2 = p_decay.size()[0] - p_decay.pow(2).sum()
+        #     loss2 = loss2 * p_decay_rate
 
-            train_loss2 += loss2
-            loss = loss + loss2
-            p_decay = torch.tensor([], device='cuda:0')
+        #     train_loss2 += loss2
+        #     loss = loss + loss2
+        #     p_decay = torch.tensor([], device='cuda:0')
         
         loss.backward()
         optimizer.step()

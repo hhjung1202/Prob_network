@@ -19,7 +19,7 @@ batch_size = 128
 learning_rate = 0.001
 
 p_decay = torch.tensor([], device='cuda:0')
-p_decay_rate = 0.1
+p_decay_rate = 0.01
 transform_train = transforms.Compose([
     transforms.RandomCrop(32, padding=4),  # augmentation performance upgrade 7~8%
     transforms.RandomHorizontalFlip(),  # right and left reverse
@@ -162,8 +162,8 @@ class BasicBlock(nn.Module):
         p = self.gate(x)
         out = out * (1-p) + self.shortcut(x) * p
         
-        if is_state.check_is_phase2() and not is_state.check_is_test():
-            p_decay = torch.cat([p_decay,p],0)
+        # if is_state.check_is_phase2() and not is_state.check_is_test():
+        #     p_decay = torch.cat([p_decay,p],0)
 
         out = F.relu(out)
         return out
@@ -237,13 +237,13 @@ def train(epoch):
         output = model(data)  # 32x32x3 -> 10*128 right? like PCA
         loss = criterion(output, target)
         
-        if is_state.check_is_phase2():
-            loss2 = p_decay.size()[0] - p_decay.pow(2).sum()
-            loss2 = loss2 * p_decay_rate
+        # if is_state.check_is_phase2():
+        #     loss2 = p_decay.size()[0] - p_decay.pow(2).sum()
+        #     loss2 = loss2 * p_decay_rate
 
-            train_loss2 += loss2
-            loss = loss + loss2
-            p_decay = torch.tensor([], device='cuda:0')
+        #     train_loss2 += loss2
+        #     loss = loss + loss2
+        #     p_decay = torch.tensor([], device='cuda:0')
         
         loss.backward()
         optimizer.step()
@@ -371,23 +371,36 @@ else:
     model.load_state_dict(checkpoint['state_dict'])
     optimizer.load_state_dict(checkpoint['optimizer'])
 
-for epoch in range(start_epoch, 165):
+for epoch in range(start_epoch, 240):
+    if epoch == 100:
+        is_state.change_phase2()
+        switching_learning(model.module)
 
-    if epoch == 120:
+    if epoch == 180:
         is_state.change_on_phase4()
         is_state.change_on_phase2()
         init_learning_phase4(model.module)
         p_decay_rate = p_decay_rate * 0.5
-
-    if epoch < 80:
+    # Base Learning
+    if epoch < 60:
         l_r = learning_rate
-    elif epoch < 120:
+    elif epoch < 80:
         l_r = learning_rate * 0.1
+    elif epoch < 100:
+        l_r = learning_rate * 0.01
+    # Routing
+    elif epoch < 140:
+        l_r = learning_rate
+    elif epoch < 160:
+        l_r = learning_rate * 0.1
+    elif epoch < 180:
+        l_r = learning_rate * 0.01
+    # ALL
     else:
         l_r = learning_rate * 0.01
 
-    if is_state.check_is_phase2:
-        l_r = l_r * 0.1
+    # if is_state.check_is_phase2:
+    #     l_r = l_r * 0.1
 
     for param_group in optimizer.param_groups:
         param_group['learning_rate'] = l_r
@@ -409,9 +422,9 @@ for epoch in range(start_epoch, 165):
 
     routing_weight_printing(model.module)
 
-    if epoch % 5 == 4 and not is_state.check_is_phase4():
-        is_state.change_phase2()
-        switching_learning(model.module)
+    # if epoch % 5 == 4 and not is_state.check_is_phase4():
+    #     is_state.change_phase2()
+    #     switching_learning(model.module)
 
 # routing_weight_printing(model.module)
 

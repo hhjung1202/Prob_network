@@ -80,7 +80,7 @@ def init_learning_phase4(model):
         if is_leaf(child):
             if hasattr(child, 'weight'):
                 child.weight.requires_grad = True
-                # print('True', child)
+                print('True', child)
         else:
             init_learning_phase4(child)
 
@@ -376,7 +376,7 @@ for epoch in range(start_epoch, 165):
     if epoch == 120:
         is_state.change_on_phase4()
         is_state.change_on_phase2()
-        init_learning_phase4()
+        init_learning_phase4(model.module)
         p_decay_rate = p_decay_rate * 0.5
 
     if epoch < 80:

@@ -75,15 +75,6 @@ def init_learning(model):
         else:
             init_learning(child)
 
-def init_learning_phase4(model):
-    for child in model.children():
-        if is_leaf(child):
-            if hasattr(child, 'weight'):
-                child.weight.requires_grad = True
-                # print('True', child)
-        else:
-            init_learning_phase4(child)
-
 def turn_off_learning(model):
     if is_leaf(model):
         if hasattr(model, 'weight'):
@@ -286,27 +277,15 @@ class is_on(object):
     def __init__(self):
         self.is_phase2 = False
         self.is_test = False
-        self.is_phase4 = False
 
     def check_is_phase2(self):
         return self.is_phase2
 
-    def change_phase2(self):
+    def change_phase(self):
         if self.is_phase2:
             self.is_phase2 = False
         else:
             self.is_phase2 = True
-
-    def change_on_phase2(self):
-        if not self.is_phase2:
-            self.is_phase2 = True
-
-    def check_is_phase4(self):
-        return self.is_phase4
-
-    def change_on_phase4(self):
-        if not self.is_phase4:
-            self.is_phase4 = True
 
     def check_is_test(self):
         return self.is_test
@@ -373,12 +352,6 @@ else:
 
 for epoch in range(start_epoch, 165):
 
-    if epoch == 120:
-        is_state.change_on_phase4()
-        is_state.change_on_phase2()
-        init_learning_phase4(model.module)
-        p_decay_rate = p_decay_rate * 0.5
-
     if epoch < 80:
         l_r = learning_rate
     elif epoch < 120:
@@ -409,8 +382,8 @@ for epoch in range(start_epoch, 165):
 
     routing_weight_printing(model.module)
 
-    if epoch % 5 == 4 and not is_state.check_is_phase4():
-        is_state.change_phase2()
+    if epoch % 5 == 4:
+        is_state.change_phase()
         switching_learning(model.module)
 
 # routing_weight_printing(model.module)
