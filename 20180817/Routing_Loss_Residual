@@ -1,3 +1,17 @@
+Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) torch.Size([64, 3, 3, 3]) tensor(195.7125, device='cuda:0', grad_fn=<NormBackward0>)
+Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) torch.Size([64, 64, 3, 3]) tensor(853.3716, device='cuda:0', grad_fn=<NormBackward0>)
+Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) torch.Size([64, 64, 3, 3]) tensor(846.9180, device='cuda:0', grad_fn=<NormBackward0>)
+Conv2d(64, 128, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False) torch.Size([128, 64, 3, 3]) tensor(1522.4583, device='cuda:0', grad_fn=<NormBackward0>)
+Conv2d(64, 128, kernel_size=(1, 1), stride=(2, 2), bias=False) torch.Size([128, 64, 1, 1]) tensor(488.8374, device='cuda:0', grad_fn=<NormBackward0>)
+Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) torch.Size([128, 128, 3, 3]) tensor(2344.8838, device='cuda:0', grad_fn=<NormBackward0>)
+Conv2d(128, 256, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False) torch.Size([256, 128, 3, 3]) tensor(4304.2046, device='cuda:0', grad_fn=<NormBackward0>)
+Conv2d(128, 256, kernel_size=(1, 1), stride=(2, 2), bias=False) torch.Size([256, 128, 1, 1]) tensor(1370.0420, device='cuda:0', grad_fn=<NormBackward0>)
+Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) torch.Size([256, 256, 3, 3]) tensor(6248.1860, device='cuda:0', grad_fn=<NormBackward0>)
+Conv2d(256, 512, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False) torch.Size([512, 256, 3, 3]) tensor(11606.5938, device='cuda:0', grad_fn=<NormBackward0>)
+Conv2d(256, 512, kernel_size=(1, 1), stride=(2, 2), bias=False) torch.Size([512, 256, 1, 1]) tensor(3853.2739, device='cuda:0', grad_fn=<NormBackward0>)
+Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) torch.Size([512, 512, 3, 3]) tensor(16289.8535, device='cuda:0', grad_fn=<NormBackward0>)
+
+
 Files already downloaded and verified
 USE 1 GPUs!
 => loading checkpoint 'drive/app/torch/save_models/checkpoint_040.pth.tar'

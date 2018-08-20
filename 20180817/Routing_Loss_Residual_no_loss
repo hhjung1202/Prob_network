@@ -1,3 +1,16 @@
+Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) torch.Size([64, 3, 3, 3]) tensor(185.4956, device='cuda:0', grad_fn=<NormBackward0>)
+Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) torch.Size([64, 64, 3, 3]) tensor(847.9070, device='cuda:0', grad_fn=<NormBackward0>)
+Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) torch.Size([64, 64, 3, 3]) tensor(850.4430, device='cuda:0', grad_fn=<NormBackward0>)
+Conv2d(64, 128, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False) torch.Size([128, 64, 3, 3]) tensor(1534.3661, device='cuda:0', grad_fn=<NormBackward0>)
+Conv2d(64, 128, kernel_size=(1, 1), stride=(2, 2), bias=False) torch.Size([128, 64, 1, 1]) tensor(480.7267, device='cuda:0', grad_fn=<NormBackward0>)
+Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) torch.Size([128, 128, 3, 3]) tensor(2335.1069, device='cuda:0', grad_fn=<NormBackward0>)
+Conv2d(128, 256, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False) torch.Size([256, 128, 3, 3]) tensor(4323.6709, device='cuda:0', grad_fn=<NormBackward0>)
+Conv2d(128, 256, kernel_size=(1, 1), stride=(2, 2), bias=False) torch.Size([256, 128, 1, 1]) tensor(1370.3347, device='cuda:0', grad_fn=<NormBackward0>)
+Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) torch.Size([256, 256, 3, 3]) tensor(6349.4214, device='cuda:0', grad_fn=<NormBackward0>)
+Conv2d(256, 512, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False) torch.Size([512, 256, 3, 3]) tensor(11663.9111, device='cuda:0', grad_fn=<NormBackward0>)
+Conv2d(256, 512, kernel_size=(1, 1), stride=(2, 2), bias=False) torch.Size([512, 256, 1, 1]) tensor(3836.1023, device='cuda:0', grad_fn=<NormBackward0>)
+Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False) torch.Size([512, 512, 3, 3]) tensor(16221.4346, device='cuda:0', grad_fn=<NormBackward0>)
+
 Files already downloaded and verified
 USE 1 GPUs!
 Epoch: 0 | Batch_idx: 0 |  Loss: (2.3151) |  Loss2: (0.0000) | Acc: (9.00%) (12/128)
