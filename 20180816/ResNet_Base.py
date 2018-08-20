@@ -75,6 +75,7 @@ class BasicBlock(nn.Module):
     def forward(self, x):
         out = F.relu(self.bn1(self.conv1(x)))
         out = out + self.shortcut(x)
+        out = out * 0.5
         out = F.relu(out)
         return out
 
@@ -224,16 +225,18 @@ else:
     model.load_state_dict(checkpoint['state_dict'])
     optimizer.load_state_dict(checkpoint['optimizer'])
 
-for epoch in range(start_epoch, 165):
+for epoch in range(start_epoch, 120):
 
-    if epoch < 80:
-        learning_rate = learning_rate
-    elif epoch < 120:
-        learning_rate = learning_rate * 0.1
+    if epoch < 70:
+        l_r = learning_rate
+    elif epoch < 100:
+        l_r = learning_rate * 0.1
     else:
-        learning_rate = learning_rate * 0.01
+        l_r = learning_rate * 0.01
+
+
     for param_group in optimizer.param_groups:
-        param_group['learning_rate'] = learning_rate
+        param_group['learning_rate'] = l_r
 
     train(epoch)
 
