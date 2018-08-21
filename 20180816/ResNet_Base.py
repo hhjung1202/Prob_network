@@ -225,11 +225,11 @@ else:
     model.load_state_dict(checkpoint['state_dict'])
     optimizer.load_state_dict(checkpoint['optimizer'])
 
-for epoch in range(start_epoch, 120):
+for epoch in range(start_epoch, 100):
 
-    if epoch < 70:
+    if epoch < 50:
         l_r = learning_rate
-    elif epoch < 100:
+    elif epoch < 75:
         l_r = learning_rate * 0.1
     else:
         l_r = learning_rate * 0.01

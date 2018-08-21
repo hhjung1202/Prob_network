@@ -141,17 +141,26 @@ class _Gate(nn.Sequential):
     def forward(self, x, res):
         
         x_ = self.avg_pool(x)
+        print(x.size())
         res_ = self.avg_pool(res)
         out = torch.cat([x_,res_], 1)
+        print(out.size())
         out = out.permute(0, 2, 3, 1)
+        print(out.size())
         out = self.tanh(self.fc1(out))
+        print(out.size())
         out = self.softmax(self.fc2(out))
+        print(out.size())
         out = out.permute(0, 3, 1, 2) # batch, 2, 1, 1
+        print(out.size())
 
         p = out[:,:1,:,:] # batch, 1, 1, 1
+        print(p.size())
         q = out[:,1:,:,:] # batch, 1, 1, 1
 
-        self.p = p
+        self.p = p.view(-1)
+        print(self.p.size())
+        print(self.p.data.size())
         return x * p + res * q
 
 # class _Gate2(nn.Sequential):
