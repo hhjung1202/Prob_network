@@ -141,26 +141,18 @@ class _Gate(nn.Sequential):
     def forward(self, x, res):
         
         x_ = self.avg_pool(x)
-        print(x.size())
         res_ = self.avg_pool(res)
         out = torch.cat([x_,res_], 1)
-        print(out.size())
         out = out.permute(0, 2, 3, 1)
-        print(out.size())
         out = self.tanh(self.fc1(out))
-        print(out.size())
         out = self.softmax(self.fc2(out))
-        print(out.size())
         out = out.permute(0, 3, 1, 2) # batch, 2, 1, 1
-        print(out.size())
 
         p = out[:,:1,:,:] # batch, 1, 1, 1
-        print(p.size())
         q = out[:,1:,:,:] # batch, 1, 1, 1
 
         self.p = p.view(-1)
-        print(self.p.size())
-        print(self.p.data.size())
+
         return x * p + res * q
 
 # class _Gate2(nn.Sequential):
@@ -359,7 +351,7 @@ class is_on(object):
 
 def save_checkpoint(state, filename):
 
-    model_dir = 'drive/app/torch/save_Routing_Gate'
+    model_dir = 'drive/app/torch/save_Routing_Gate_2'
     model_filename = os.path.join(model_dir, filename)
     latest_filename = os.path.join(model_dir, 'latest.txt')
 
@@ -376,7 +368,7 @@ def save_checkpoint(state, filename):
 
 def load_checkpoint():
 
-    model_dir = 'drive/app/torch/save_Routing_Gate'
+    model_dir = 'drive/app/torch/save_Routing_Gate_2'
     latest_filename = os.path.join(model_dir, 'latest.txt')
     if os.path.exists(latest_filename):
         with open(latest_filename, 'r') as fin:
@@ -391,7 +383,7 @@ def load_checkpoint():
 def routing_weight_printing(model):
     for child in model.children():
         if hasattr(child, 'phase'):
-            print('percent', child.p.data)
+            print('percent', child.p.data, child.p.data.size())
         elif is_leaf(child):
             continue
         else:
@@ -452,9 +444,9 @@ for epoch in range(start_epoch, 200):
             'optimizer': optimizer.state_dict(),
         }, model_filename)
 
-    is_state.change_test()
+    # is_state.change_test()
     test()  
-    is_state.change_test()
+    # is_state.change_test()
 
     routing_weight_printing(model.module)
 

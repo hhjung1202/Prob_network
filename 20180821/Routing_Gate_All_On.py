@@ -429,9 +429,6 @@ def conv_weight_L1_printing(model):
             conv_weight_L1_printing(child)
 
 
-init_learning(model.module)
-# print(model)
-
 is_state = is_on()
 
 start_epoch = 0
@@ -443,23 +440,14 @@ else:
     model.load_state_dict(checkpoint['state_dict'])
     optimizer.load_state_dict(checkpoint['optimizer'])
 
-for epoch in range(start_epoch, 200):
+for epoch in range(start_epoch, 100):
 
-    if epoch == 180:
-        is_state.change_on_phase4()
-        is_state.change_on_phase2()
-        init_learning_phase4(model.module)
-        # p_decay_rate = p_decay_rate * 0.5
-
-    if epoch < 100:
+    if epoch < 60:
         l_r = learning_rate
-    elif epoch < 150:
+    elif epoch < 80:
         l_r = learning_rate * 0.1
     else:
         l_r = learning_rate * 0.01
-
-    # if is_state.check_is_phase2:
-    #     l_r = l_r * 0.1
 
     for param_group in optimizer.param_groups:
         param_group['learning_rate'] = l_r
@@ -475,15 +463,9 @@ for epoch in range(start_epoch, 200):
             'optimizer': optimizer.state_dict(),
         }, model_filename)
 
-    # is_state.change_test()
     test()  
-    # is_state.change_test()
 
     routing_weight_printing(model.module)
-
-    if epoch % 5 == 4 and not is_state.check_is_phase4():
-        is_state.change_phase2()
-        switching_learning(model.module)
 
     if epoch % 10 == 0:
         conv_weight_L1_printing((model.module))

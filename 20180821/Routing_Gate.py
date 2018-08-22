@@ -443,17 +443,17 @@ else:
     model.load_state_dict(checkpoint['state_dict'])
     optimizer.load_state_dict(checkpoint['optimizer'])
 
-for epoch in range(start_epoch, 200):
+for epoch in range(start_epoch, 240):
 
-    if epoch == 180:
+    if epoch == 200:
         is_state.change_on_phase4()
         is_state.change_on_phase2()
         init_learning_phase4(model.module)
         # p_decay_rate = p_decay_rate * 0.5
 
-    if epoch < 100:
+    if epoch < 120:
         l_r = learning_rate
-    elif epoch < 150:
+    elif epoch < 160:
         l_r = learning_rate * 0.1
     else:
         l_r = learning_rate * 0.01

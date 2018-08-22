@@ -133,7 +133,7 @@ class _Gate(nn.Sequential):
         self.out_num = out_num
         self.avg_pool = nn.AdaptiveAvgPool2d(1)
         self.fc1 = nn.Linear(2 * channels, channels // reduction, bias=False)
-        self.tanh = nn.Tanh()        
+        self.ReLU = nn.ReLU(inplace=True)
         self.fc2 = nn.Linear(channels // reduction, out_num, bias=False)
         self.fc2.weight.data.fill_(0.)
         self.softmax = nn.Softmax(3)
@@ -144,7 +144,7 @@ class _Gate(nn.Sequential):
         res_ = self.avg_pool(res)
         out = torch.cat([x_,res_], 1)
         out = out.permute(0, 2, 3, 1)
-        out = self.tanh(self.fc1(out))
+        out = self.ReLU(self.fc1(out))
         out = self.softmax(self.fc2(out))
         out = out.permute(0, 3, 1, 2)
         # print('1',out.size())
@@ -156,50 +156,6 @@ class _Gate(nn.Sequential):
 
         return x * out[0] + res * out[1]
 
-
-# class _Gate(nn.Sequential):
-#     phase = 2
-#     def __init__(self, channels, reduction, out_num, batch_num = 128):
-#         super(_Gate, self).__init__()
-
-#         self.avg_pool = nn.AdaptiveAvgPool2d(1)
-
-#         # self.one = torch.tensor([1.], requires_grad=False, device='cuda:0')
-#         self.fc1 = nn.Linear(2 * channels * batch_num, channels * batch_num // reduction, bias=False)
-#         self.relu = nn.ReLU(inplace=True)
-#         self.fc2 = nn.Linear(channels * batch_num // reduction, out_num * batch_num // reduction, bias=False)
-#         self.tanh = nn.Tanh()
-#         self.fc3 = nn.Linear(out_num * batch_num // reduction, out_num, bias=False)
-#         self.fc3.weight.data.fill_(0.)
-#         self.softmax = nn.Softmax()
-
-#     def forward(self, x, res):
-#         x_ = self.avg_pool(x)
-#         res_ = self.avg_pool(res)
-#         out = torch.cat([x_,res_], 1)        
-#         out = out.view(-1)
-#         out = self.relu(self.fc1(out))
-#         out = self.tanh(self.fc2(out))
-#         out = self.softmax(self.fc3(out))
-#         self.p = out
-
-#         return x * out[0] + res * out[1]
-
-
-# class _Gate2(nn.Sequential):
-#     phase = 2
-#     def __init__(self, channels, reduction, out_num, batch_num = 128):
-#         super(_Gate2, self).__init__()
-#
-#         self.conv_x = nn.Conv2d(channels, 1, kernel_size=1, padding=0)
-#         self.conv_res = nn.Conv2d(channels, 1, kernel_size=1, padding=0)
-#
-#     def forward(self, x, res):
-#         x_ = self.conv_x(x) # batch, 1, W, H
-#         res_ = self.conv_res(res) # batch, 1, W, H
-#         out = torch.cat([x_,res_], 1)        
-#
-#         return x * out[0] + res * out[1]
 
 class BasicBlock(nn.Module):
     expansion = 1
@@ -443,17 +399,17 @@ else:
     model.load_state_dict(checkpoint['state_dict'])
     optimizer.load_state_dict(checkpoint['optimizer'])
 
-for epoch in range(start_epoch, 200):
+for epoch in range(start_epoch, 240):
 
-    if epoch == 180:
+    if epoch == 200:
         is_state.change_on_phase4()
         is_state.change_on_phase2()
         init_learning_phase4(model.module)
         # p_decay_rate = p_decay_rate * 0.5
 
-    if epoch < 100:
+    if epoch < 120:
         l_r = learning_rate
-    elif epoch < 150:
+    elif epoch < 160:
         l_r = learning_rate * 0.1
     else:
         l_r = learning_rate * 0.01

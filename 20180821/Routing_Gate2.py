@@ -146,45 +146,14 @@ class _Gate(nn.Sequential):
         out = out.permute(0, 2, 3, 1)
         out = self.tanh(self.fc1(out))
         out = self.softmax(self.fc2(out))
-        out = out.permute(0, 3, 1, 2)
-        # print('1',out.size())
-        out = torch.sum(torch.t(out.view(-1,self.out_num)),1) # avg p
-        # print('2',out.size())
-        out = out / torch.sum(out)
+        out = out.permute(0, 3, 1, 2) # batch, 2, 1, 1
 
-        self.p = out
+        p = out[:,:1,:,:] # batch, 1, 1, 1
+        q = out[:,1:,:,:] # batch, 1, 1, 1
 
-        return x * out[0] + res * out[1]
+        self.p = p.view(-1)
 
-
-# class _Gate(nn.Sequential):
-#     phase = 2
-#     def __init__(self, channels, reduction, out_num, batch_num = 128):
-#         super(_Gate, self).__init__()
-
-#         self.avg_pool = nn.AdaptiveAvgPool2d(1)
-
-#         # self.one = torch.tensor([1.], requires_grad=False, device='cuda:0')
-#         self.fc1 = nn.Linear(2 * channels * batch_num, channels * batch_num // reduction, bias=False)
-#         self.relu = nn.ReLU(inplace=True)
-#         self.fc2 = nn.Linear(channels * batch_num // reduction, out_num * batch_num // reduction, bias=False)
-#         self.tanh = nn.Tanh()
-#         self.fc3 = nn.Linear(out_num * batch_num // reduction, out_num, bias=False)
-#         self.fc3.weight.data.fill_(0.)
-#         self.softmax = nn.Softmax()
-
-#     def forward(self, x, res):
-#         x_ = self.avg_pool(x)
-#         res_ = self.avg_pool(res)
-#         out = torch.cat([x_,res_], 1)        
-#         out = out.view(-1)
-#         out = self.relu(self.fc1(out))
-#         out = self.tanh(self.fc2(out))
-#         out = self.softmax(self.fc3(out))
-#         self.p = out
-
-#         return x * out[0] + res * out[1]
-
+        return x * p + res * q
 
 # class _Gate2(nn.Sequential):
 #     phase = 2
@@ -414,7 +383,7 @@ def load_checkpoint():
 def routing_weight_printing(model):
     for child in model.children():
         if hasattr(child, 'phase'):
-            print('percent', child.p.data)
+            print('percent', child.p.data, child.p.data.size())
         elif is_leaf(child):
             continue
         else:
@@ -443,17 +412,17 @@ else:
     model.load_state_dict(checkpoint['state_dict'])
     optimizer.load_state_dict(checkpoint['optimizer'])
 
-for epoch in range(start_epoch, 200):
+for epoch in range(start_epoch, 240):
 
-    if epoch == 180:
+    if epoch == 200:
         is_state.change_on_phase4()
         is_state.change_on_phase2()
         init_learning_phase4(model.module)
         # p_decay_rate = p_decay_rate * 0.5
 
-    if epoch < 100:
+    if epoch < 120:
         l_r = learning_rate
-    elif epoch < 150:
+    elif epoch < 160:
         l_r = learning_rate * 0.1
     else:
         l_r = learning_rate * 0.01
