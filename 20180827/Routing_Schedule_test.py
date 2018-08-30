@@ -350,7 +350,7 @@ class is_on(object):
 
 def save_checkpoint(state, filename):
 
-    model_dir = 'drive/app/torch/save_Routing_Gate_2'
+    model_dir = 'drive/app/torch/save_Schedule'
     model_filename = os.path.join(model_dir, filename)
     latest_filename = os.path.join(model_dir, 'latest.txt')
 
@@ -367,7 +367,7 @@ def save_checkpoint(state, filename):
 
 def load_checkpoint():
 
-    model_dir = 'drive/app/torch/save_Routing_Gate_2'
+    model_dir = 'drive/app/torch/save_Schedule'
     latest_filename = os.path.join(model_dir, 'latest.txt')
     if os.path.exists(latest_filename):
         with open(latest_filename, 'r') as fin:
@@ -449,7 +449,7 @@ for epoch in range(start_epoch, 240):
 
     routing_weight_printing(model.module)
 
-    if epoch % 5 == 4 and not is_state.check_is_phase4():
+    if epoch % 9 == 8 and not is_state.check_is_phase4():
         is_state.change_phase2()
         switching_learning(model.module)
 
