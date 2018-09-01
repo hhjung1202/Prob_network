@@ -13,7 +13,7 @@ from collections import OrderedDict
 
 # one epoch means all thing learning by one learning
 # residual learning image? n < 128 is it right? when did not match last thihngs is not good performance
-os.environ["CUDA_VISIBLE_DEVICES"] = '0'
+os.environ["CUDA_VISIBLE_DEVICES"] = '5'
 start_time = time.time()
 batch_size = 128
 learning_rate = 0.001
@@ -454,10 +454,10 @@ for epoch in range(start_epoch, 240):
         switching_learning(model.module)
 
     if epoch % 10 == 0:
-        conv_weight_L1_printing((model.module))
+        conv_weight_L1_printing(model.module)
 
 # routing_weight_printing(model.module)
-conv_weight_L1_printing((model.module))
+conv_weight_L1_printing(model.module)
 
 now = time.gmtime(time.time() - start_time)
 print('{} hours {} mins {} secs for training'.format(now.tm_hour, now.tm_min, now.tm_sec))
