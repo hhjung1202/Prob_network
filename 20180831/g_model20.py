@@ -1,3 +1,4 @@
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
@@ -5,11 +6,11 @@ class _Gate(nn.Sequential):
     phase = 2
     def __init__(self, channels, reduction, num_route):
         super(_Gate, self).__init__()
-        self.out_num = out_num
+        self.num_route = num_route
         self.avg_pool = nn.AdaptiveAvgPool2d(1)
         self.fc1 = nn.Linear(2 * channels, channels // reduction, bias=False)
         self.LeakyReLU = nn.LeakyReLU(0.1)     
-        self.fc2 = nn.Linear(channels // reduction, out_num, bias=False)
+        self.fc2 = nn.Linear(channels // reduction, num_route, bias=False)
         self.fc2.weight.data.fill_(0.)
         self.softmax = nn.Softmax(3)
 

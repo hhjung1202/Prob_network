@@ -169,6 +169,8 @@ def conv_weight_L2_printing(model):
 
 
 def print_log(text, filename="log.txt"):
+    if not os.path.exists(default_model_dir):
+        os.makedirs(default_model_dir)
     model_filename = os.path.join(default_model_dir, filename)
     with open(model_filename, "a") as myfile:
         myfile.write(text + "\n")

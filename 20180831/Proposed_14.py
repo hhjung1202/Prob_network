@@ -11,7 +11,7 @@ import utils
 os.environ["CUDA_VISIBLE_DEVICES"] = '5'
 
 def main():
-    model_dir = '../hhjung/save_model'
+    model_dir = '../hhjung/save_Proposed14_model'
     utils.default_model_dir = model_dir
     learning_rate = 0.1
     start_time = time.time()
