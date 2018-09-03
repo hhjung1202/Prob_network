@@ -2,7 +2,7 @@ import torch
 from torch.autograd import Variable
 import torch.optim as optim
 from torchvision import datasets, transforms
-from model_20 import *
+from model_14 import *
 import os
 import torch.backends.cudnn as cudnn
 import time
@@ -11,9 +11,9 @@ import utils
 os.environ["CUDA_VISIBLE_DEVICES"] = '5'
 
 def main():
-    model_dir = '../hhjung/save_Resnet20_model'
+    model_dir = '../hhjung/save_Resnet14_model'
     utils.default_model_dir = model_dir
-    lr = 0.1
+    learning_rate = 0.1
     start_time = time.time()
     cifar10_loader()
     model = ResNet()
@@ -27,7 +27,7 @@ def main():
     else:
         print("NO GPU -_-;")
 
-    optimizer = optim.SGD(model.parameters(), lr=lr, momentum=0.9, weight_decay=1e-4)
+    optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=0.9, weight_decay=1e-4)
     criterion = nn.CrossEntropyLoss().cuda()
 
     start_epoch = 0
@@ -40,18 +40,13 @@ def main():
         model.load_state_dict(checkpoint['state_dict'])
         optimizer.load_state_dict(checkpoint['optimizer'])
 
-    for param_group in optimizer.param_groups:
-        param_group['learning_rate'] = lr * 0.01
-    train(model, optimizer, criterion, train_loader, epoch)
-    test(model, criterion, test_loader, epoch)
-
     for epoch in range(start_epoch, 165):
         if epoch < 80:
-            learning_rate = lr
+            learning_rate = learning_rate
         elif epoch < 120:
-            learning_rate = lr * 0.1
+            learning_rate = learning_rate * 0.1
         else:
-            learning_rate = lr * 0.01
+            learning_rate = learning_rate * 0.01
         for param_group in optimizer.param_groups:
             param_group['learning_rate'] = learning_rate
 
@@ -70,6 +65,7 @@ def main():
     utils.conv_weight_L1_printing(model.module)
     now = time.gmtime(time.time() - start_time)
     print('{} hours {} mins {} secs for training'.format(now.tm_hour, now.tm_min, now.tm_sec))
+
 
 def cifar10_loader():
     batch_size = 128
