@@ -46,18 +46,14 @@ class ResNet(nn.Module):
         self.layer1 = nn.Sequential(
             BasicBlock(in_channels=16, out_channels=16, stride=1, downsample=None),
             BasicBlock(in_channels=16, out_channels=16, stride=1, downsample=None),
-            BasicBlock(in_channels=16, out_channels=16, stride=1, downsample=None)
         )
         self.layer2 = nn.Sequential(
             BasicBlock(in_channels=16, out_channels=32, stride=2, downsample=True),
             BasicBlock(in_channels=32, out_channels=32, stride=1, downsample=None),
-            BasicBlock(in_channels=32, out_channels=32, stride=1, downsample=None)
-
         )
         self.layer3 = nn.Sequential(
             BasicBlock(in_channels=32, out_channels=64, stride=2, downsample=True),
             BasicBlock(in_channels=64, out_channels=64, stride=1, downsample=None),
-            BasicBlock(in_channels=64, out_channels=64, stride=1, downsample=None)
         )
 
         self.avgpool = nn.AvgPool2d(kernel_size=8, stride=1)

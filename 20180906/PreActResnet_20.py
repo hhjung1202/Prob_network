@@ -2,21 +2,22 @@ import torch
 from torch.autograd import Variable
 import torch.optim as optim
 from torchvision import datasets, transforms
-from model_14 import *
+from PreActmodel_20 import *
 import os
 import torch.backends.cudnn as cudnn
 import time
 import utils
 
-os.environ["CUDA_VISIBLE_DEVICES"] = '5'
+os.environ["CUDA_VISIBLE_DEVICES"] = '4'
+max_result = []
 
 def main():
-    model_dir = '../hhjung/save_Resnet14_model'
+    model_dir = '../hhjung/save_preAct20_model'
     utils.default_model_dir = model_dir
     lr = 0.1
     start_time = time.time()
     cifar10_loader()
-    model = ResNet()
+    model = PreActResNet()
 
     if torch.cuda.is_available():
         # os.environ["CUDA_VISIBLE_DEVICES"] = '0'
@@ -65,7 +66,6 @@ def main():
     utils.conv_weight_L1_printing(model.module)
     now = time.gmtime(time.time() - start_time)
     print('{} hours {} mins {} secs for training'.format(now.tm_hour, now.tm_min, now.tm_sec))
-
 
 def cifar10_loader():
     batch_size = 128
@@ -149,10 +149,11 @@ def test(model, criterion, test_loader, epoch):
         total += target.size(0)
         correct += predicted.eq(target.data).cpu().sum()
 
-    utils.print_log('# TEST : Epoch : {} | Loss: ({:.4f}) | Acc: ({:.2f}%) ({}/{}) | Err: ({:.2f}%)'
-          .format(epoch, test_loss/(batch_idx+1), 100.*correct/total, correct, total, 100-100.*correct/total))
-    print('# TEST : Epoch : {} | Loss: ({:.4f}) | Acc: ({:.2f}%) ({}/{}) | Err: ({:.2f}%)'
-          .format(epoch, test_loss/(batch_idx+1), 100.*correct/total, correct, total, 100-100.*correct/total))
+    max_result.append(correct)
+    utils.print_log('# TEST : Epoch : {} | Loss: ({:.4f}) | Acc: ({:.2f}%) ({}/{}) | Err: ({:.2f}%) | Max: ({})'
+          .format(epoch, test_loss/(batch_idx+1), 100.*correct/total, correct, total, 100-100.*correct/total, max(max_result)))
+    print('# TEST : Epoch : {} | Loss: ({:.4f}) | Acc: ({:.2f}%) ({}/{}) | Err: ({:.2f}% | Max: ({}))'
+          .format(epoch, test_loss/(batch_idx+1), 100.*correct/total, correct, total, 100-100.*correct/total, max(max_result)))
 
 
 if __name__=='__main__':

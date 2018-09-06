@@ -13,7 +13,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = '5'
 def main():
     model_dir = '../hhjung/save_Proposed20_model'
     utils.default_model_dir = model_dir
-    learning_rate = 0.1
+    lr = 0.1
     start_time = time.time()
     cifar10_loader()
     model = ResNet()
@@ -27,7 +27,7 @@ def main():
     else:
         print("NO GPU -_-;")
 
-    optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=0.9, weight_decay=1e-4)
+    optimizer = optim.SGD(model.parameters(), lr=lr, momentum=0.9, weight_decay=1e-4)
     criterion = nn.CrossEntropyLoss().cuda()
 
     start_epoch = 0
@@ -44,13 +44,13 @@ def main():
 
     for epoch in range(start_epoch, 165):
         if epoch < 80:
-            learning_rate = learning_rate
+            learning_rate = lr
         elif epoch < 120:
-            learning_rate = learning_rate * 0.1
+            learning_rate = lr * 0.1
         else:
-            learning_rate = learning_rate * 0.01
+            learning_rate = lr * 0.01
         for param_group in optimizer.param_groups:
-            param_group['learning_rate'] = learning_rate
+            param_group['lr'] = learning_rate
 
         train(model, optimizer, criterion, train_loader, epoch)
         test(model, criterion, test_loader, epoch)
