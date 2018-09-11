@@ -68,7 +68,7 @@ class BasicBlock(nn.Module):
 
 
 class ResNet(nn.Module):
-    def __init__(self, num_classes=10):
+    def __init__(self, num_classes=100):
         super(ResNet, self).__init__()
         self.conv1 = nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(16)
@@ -81,12 +81,10 @@ class ResNet(nn.Module):
         for i in range(1,self.n):
             self.layer1.add_module('layer1-%d' % (i), BasicBlock(in_channels=16, out_channels=16, stride=1, downsample=None))
 
-
         self.layer2 = nn.Sequential()
         self.layer2.add_module('layer2-0', BasicBlock(in_channels=16, out_channels=32, stride=2, downsample=True))
         for i in range(1,self.n):
             self.layer2.add_module('layer2-%d' % (i), BasicBlock(in_channels=32, out_channels=32, stride=1, downsample=None))
-
 
         self.layer3 = nn.Sequential()
         self.layer3.add_module('layer3-0', BasicBlock(in_channels=32, out_channels=64, stride=2, downsample=True))

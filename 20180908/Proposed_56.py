@@ -2,21 +2,21 @@ import torch
 from torch.autograd import Variable
 import torch.optim as optim
 from torchvision import datasets, transforms
-from g_model110 import *
+from g_model56 import *
 import os
 import torch.backends.cudnn as cudnn
 import time
 import utils
 
-os.environ["CUDA_VISIBLE_DEVICES"] = '3,4'
+os.environ["CUDA_VISIBLE_DEVICES"] = '4'
 max_result = []
 
 def main():
-    model_dir = '../hhjung/20180907/save_Proposed110_model'
+    model_dir = '../hhjung/20180908/save_Proposed56_model'
     utils.default_model_dir = model_dir
     lr = 0.1
     start_time = time.time()
-    cifar10_loader()
+    cifar100_loader()
     model = ResNet()
 
     if torch.cuda.is_available():
@@ -42,12 +42,6 @@ def main():
         optimizer.load_state_dict(checkpoint['optimizer'])
 
     utils.init_learning(model.module)
-
-    for param_group in optimizer.param_groups:
-        param_group['lr'] = lr * 0.1
-
-    train(model, optimizer, criterion, train_loader, 0)
-    test(model, criterion, test_loader, 0)
 
     for epoch in range(start_epoch, 165):
         if epoch < 80:
@@ -82,7 +76,7 @@ def main():
     now = time.gmtime(time.time() - start_time)
     print('{} hours {} mins {} secs for training'.format(now.tm_hour, now.tm_min, now.tm_sec))
 
-def cifar10_loader():
+def cifar100_loader():
     batch_size = 128
     global train_loader, test_loader
     print("Data Loading ...")
@@ -90,22 +84,22 @@ def cifar10_loader():
         transforms.RandomCrop(32, padding=4),
         transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
-        transforms.Normalize(mean=(0.4914, 0.4824, 0.4467),
-                             std=(0.2471, 0.2436, 0.2616))
+        transforms.Normalize(mean=(0.5071, 0.4867, 0.4408),
+                             std=(0.2675, 0.2565, 0.2761))
     ])
 
     transform_test = transforms.Compose([
         transforms.ToTensor(),
-        transforms.Normalize(mean=(0.4914, 0.4824, 0.4467),
-                             std=(0.2471, 0.2436, 0.2616))
+        transforms.Normalize(mean=(0.5071, 0.4867, 0.4408),
+                             std=(0.2675, 0.2565, 0.2761))
     ])
 
-    train_dataset = datasets.CIFAR10(root='../hhjung/cifar10/',
+    train_dataset = datasets.CIFAR100(root='../hhjung/cifar100/',
                                      train=True,
                                      transform=transform_train,
                                      download=True)
 
-    test_dataset = datasets.CIFAR10(root='../hhjung/cifar10/',
+    test_dataset = datasets.CIFAR100(root='../hhjung/cifar100/',
                                     train=False,
                                     transform=transform_test)
 

@@ -41,6 +41,14 @@ def main():
         model.load_state_dict(checkpoint['state_dict'])
         optimizer.load_state_dict(checkpoint['optimizer'])
 
+
+    for param_group in optimizer.param_groups:
+        param_group['lr'] = lr * 0.1
+
+    train(model, optimizer, criterion, train_loader, 0)
+    test(model, criterion, test_loader, 0)
+
+
     for epoch in range(start_epoch, 165):
         if epoch < 80:
             learning_rate = lr
