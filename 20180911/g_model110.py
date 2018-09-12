@@ -62,40 +62,37 @@ class BasicBlock(nn.Module):
         if self.downsample is not None:
             residual = self.downsample(x)
 
-        out += residual
+        out = self.gate(out, residual)
         out = self.relu(out)
         return out
 
 
 class ResNet(nn.Module):
-    def __init__(self, num_classes=100):
+    def __init__(self, num_classes=10):
         super(ResNet, self).__init__()
         self.conv1 = nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(16)
         self.relu = nn.ReLU(inplace=True)
 
-        self.layer1 = nn.Sequential(
-            BasicBlock(in_channels=16, out_channels=16, stride=1, downsample=None),
-            BasicBlock(in_channels=16, out_channels=16, stride=1, downsample=None),
-            BasicBlock(in_channels=16, out_channels=16, stride=1, downsample=None),
-            BasicBlock(in_channels=16, out_channels=16, stride=1, downsample=None),
-            BasicBlock(in_channels=16, out_channels=16, stride=1, downsample=None)
-        )
-        self.layer2 = nn.Sequential(
-            BasicBlock(in_channels=16, out_channels=32, stride=2, downsample=True),
-            BasicBlock(in_channels=32, out_channels=32, stride=1, downsample=None),
-            BasicBlock(in_channels=32, out_channels=32, stride=1, downsample=None),
-            BasicBlock(in_channels=32, out_channels=32, stride=1, downsample=None),
-            BasicBlock(in_channels=32, out_channels=32, stride=1, downsample=None)
+        self.n = 18
 
-        )
-        self.layer3 = nn.Sequential(
-            BasicBlock(in_channels=32, out_channels=64, stride=2, downsample=True),
-            BasicBlock(in_channels=64, out_channels=64, stride=1, downsample=None),
-            BasicBlock(in_channels=64, out_channels=64, stride=1, downsample=None),
-            BasicBlock(in_channels=64, out_channels=64, stride=1, downsample=None),
-            BasicBlock(in_channels=64, out_channels=64, stride=1, downsample=None)
-        )
+        self.layer1 = nn.Sequential()
+        self.layer1.add_module('layer1-0', BasicBlock(in_channels=16, out_channels=16, stride=1, downsample=None))
+        for i in range(1,self.n):
+            self.layer1.add_module('layer1-%d' % (i), BasicBlock(in_channels=16, out_channels=16, stride=1, downsample=None))
+
+
+        self.layer2 = nn.Sequential()
+        self.layer2.add_module('layer2-0', BasicBlock(in_channels=16, out_channels=32, stride=2, downsample=True))
+        for i in range(1,self.n):
+            self.layer2.add_module('layer2-%d' % (i), BasicBlock(in_channels=32, out_channels=32, stride=1, downsample=None))
+
+
+        self.layer3 = nn.Sequential()
+        self.layer3.add_module('layer3-0', BasicBlock(in_channels=32, out_channels=64, stride=2, downsample=True))
+        for i in range(1,self.n):
+            self.layer3.add_module('layer3-%d' % (i), BasicBlock(in_channels=64, out_channels=64, stride=1, downsample=None))
+
 
         self.avgpool = nn.AvgPool2d(kernel_size=8, stride=1)
         self.fc = nn.Linear(64, num_classes)
