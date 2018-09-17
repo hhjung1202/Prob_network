@@ -251,10 +251,18 @@ else:
 
 if torch.cuda.is_available():
     model.cuda()
-
+def weight_extract(model):
+    global c
+    for child in model.children():
+        if hasattr(child, 'phase'):
+            c = torch.cat([c, child.p.view(-1,1)], 1)
+        elif is_leaf(child):
+            continue
+        else:
+            routing_weight_printing(child)
 
 def train(epoch):
-    global p_decay, is_state, str_w
+    global p_decay, is_state, str_w, c
     model.train()
     train_loss = 0 
     total = 0
@@ -277,19 +285,11 @@ def train(epoch):
 
         c = target.view(-1,1) # batch array torch.tensor[128]
         c = c.type(torch.cuda.FloatTensor)
-        c = torch.cat([c, model.module.layer1[0].gate.p.view(-1,1) ], 1)
-        c = torch.cat([c, model.module.layer1[1].gate.p.view(-1,1) ], 1)
-        c = torch.cat([c, model.module.layer2[0].gate.p.view(-1,1) ], 1)
-        c = torch.cat([c, model.module.layer2[1].gate.p.view(-1,1) ], 1)
-        c = torch.cat([c, model.module.layer3[0].gate.p.view(-1,1) ], 1)
-        c = torch.cat([c, model.module.layer3[1].gate.p.view(-1,1) ], 1)
-        c = torch.cat([c, model.module.layer4[0].gate.p.view(-1,1) ], 1)
-        c = torch.cat([c, model.module.layer4[1].gate.p.view(-1,1) ], 1)
-        
+        weight_extract(model.module)
+
         for i in c:
             for j in i:
                 str_w = str_w + str(j.tolist()) + ','
-
             str_w += '\n'
         
         loss.backward()
@@ -304,7 +304,7 @@ def train(epoch):
         correct += predicted.eq(target.data).cpu().sum()
         if batch_idx % 10 == 0:
             print('Epoch: {} | Batch_idx: {} |  Loss: ({:.4f}) |  Loss2: ({:.4f}) | Acc: ({:.2f}%) ({}/{})'
-                  .format(epoch, batch_idx, train_loss / (batch_idx + 1), train_loss2 / (batch_idx + 1), 100. * correct / total, correct, total))
+                  .format(epoch, batch_idx, train_loss / (batch_idx + 1), train_loss2 / (batch_idx + 1), 100. * correct / total, correct, total))    
 
 
 def test():
