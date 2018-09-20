@@ -83,7 +83,11 @@ def main(model_dir, model, dataset):
 
     class_counter, class_weight_sum, class_average, total_average = utils.load_gate_csv()
 
-    
+    _, index = torch.sort(total_average)
+    # index about (smallest) index[0], index[1], .... (biggest)
+    # layer name change, layer0 to layer'n-1'
+    # find 'layer' + str(index[0]) from model.module
+    # and change self.z to 0
 
     # utils.conv_weight_L1_printing(model.module)
     
