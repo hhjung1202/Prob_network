@@ -12,6 +12,8 @@ os.environ["CUDA_VISIBLE_DEVICES"] = '2'
 
 def main(model_dir, model, dataset):
     utils.default_model_dir = model_dir
+    utils.c = None
+    utils.str_w = ''
     # model = model
     lr = 0.1
     start_time = time.time()
@@ -19,7 +21,7 @@ def main(model_dir, model, dataset):
     if dataset == 'cifar10':
         train_loader, test_loader = utils.cifar10_loader()
     elif dataset == 'cifar100':
-        train_loader, test_loader = utils.cifar10_loader()
+        train_loader, test_loader = utils.cifar100_loader()
 
     if torch.cuda.is_available():
         # os.environ["CUDA_VISIBLE_DEVICES"] = '0'

@@ -179,6 +179,7 @@ def print_log(text, filename="log.txt"):
         myfile.write(text + "\n")
 
 def weight_extract(model):
+    global c
     if c is not None:
         for child in model.children():
             if hasattr(child, 'phase'):
@@ -190,6 +191,7 @@ def weight_extract(model):
 
 
 def save_to_csv():
+    global str_w
     if not os.path.exists(default_model_dir):
         os.makedirs(default_model_dir)
 

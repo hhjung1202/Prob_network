@@ -19,7 +19,7 @@ def main(model_dir, model, dataset):
     if dataset == 'cifar10':
         train_loader, test_loader = utils.cifar10_loader()
     elif dataset == 'cifar100':
-        train_loader, test_loader = utils.cifar10_loader()
+        train_loader, test_loader = utils.cifar100_loader()
     
 
     if torch.cuda.is_available():
@@ -127,37 +127,37 @@ layer_set = [14, 20, 32, 44, 56, 110]
 if __name__=='__main__':
     
     max_result = []
-    model_dir = '../hhjung/Basemodel/cifar10/Resnet14'
-    model_selection = ResNet(num_classes=10, resnet_layer=layer_set[0])
-    dataset = 'cifar10'
+    model_dir = '../hhjung/Basemodel/cifar100/Resnet14'
+    model_selection = ResNet(num_classes=100, resnet_layer=layer_set[0])
+    dataset = 'cifar100'
     main(model_dir, model_selection, dataset)
 
     max_result = []
-    model_dir = '../hhjung/Basemodel/cifar10/Resnet20'
-    model_selection = ResNet(num_classes=10, resnet_layer=layer_set[1])
-    dataset = 'cifar10'
+    model_dir = '../hhjung/Basemodel/cifar100/Resnet20'
+    model_selection = ResNet(num_classes=100, resnet_layer=layer_set[1])
+    dataset = 'cifar100'
     main(model_dir, model_selection, dataset)
     
     max_result = []
-    model_dir = '../hhjung/Basemodel/cifar10/Resnet32'
-    model_selection = ResNet(num_classes=10, resnet_layer=layer_set[2])
-    dataset = 'cifar10'
+    model_dir = '../hhjung/Basemodel/cifar100/Resnet32'
+    model_selection = ResNet(num_classes=100, resnet_layer=layer_set[2])
+    dataset = 'cifar100'
     main(model_dir, model_selection, dataset)
 
     max_result = []
-    model_dir = '../hhjung/Basemodel/cifar10/Resnet44'
-    model_selection = ResNet(num_classes=10, resnet_layer=layer_set[3])
-    dataset = 'cifar10'
+    model_dir = '../hhjung/Basemodel/cifar100/Resnet44'
+    model_selection = ResNet(num_classes=100, resnet_layer=layer_set[3])
+    dataset = 'cifar100'
     main(model_dir, model_selection, dataset)
 
     max_result = []
-    model_dir = '../hhjung/Basemodel/cifar10/Resnet56'
-    model_selection = ResNet(num_classes=10, resnet_layer=layer_set[4])
-    dataset = 'cifar10'
+    model_dir = '../hhjung/Basemodel/cifar100/Resnet56'
+    model_selection = ResNet(num_classes=100, resnet_layer=layer_set[4])
+    dataset = 'cifar100'
     main(model_dir, model_selection, dataset)
 
     max_result = []
-    model_dir = '../hhjung/Basemodel/cifar10/Resnet110'
-    model_selection = ResNet(num_classes=10, resnet_layer=layer_set[5])
-    dataset = 'cifar10'
+    model_dir = '../hhjung/Basemodel/cifar100/Resnet110'
+    model_selection = ResNet(num_classes=100, resnet_layer=layer_set[5])
+    dataset = 'cifar100'
     main(model_dir, model_selection, dataset)
