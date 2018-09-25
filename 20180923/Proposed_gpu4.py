@@ -8,7 +8,7 @@ import torch.backends.cudnn as cudnn
 import time
 import utils
 
-os.environ["CUDA_VISIBLE_DEVICES"] = '3'
+os.environ["CUDA_VISIBLE_DEVICES"] = '4'
 
 def main(model_dir, model, dataset):
     utils.default_model_dir = model_dir
@@ -182,26 +182,20 @@ layer_set = [14, 20, 32, 44, 56, 110]
 
 if __name__=='__main__':
     
-    # max_result = []
-    # model_dir = '../hhjung/Proposed/cifar10/Resnet110'
-    # model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[5])
-    # dataset = 'cifar10'
-    # main(model_dir, model_selection, dataset)
+    max_result = []
+    model_dir = '../hhjung/Proposed/cifar10/Resnet110x'
+    model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[5])
+    dataset = 'cifar10'
+    main(model_dir, model_selection, dataset)
+
+    max_result = []
+    model_dir = '../hhjung/Proposed/cifar10/Resnet110y'
+    model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[5])
+    dataset = 'cifar10'
+    main(model_dir, model_selection, dataset)
     
-    max_result = []
-    model_dir = '../hhjung/Proposed/cifar100/Resnet110a'
-    model_selection = ResNet(num_gate=7,num_classes=100,resnet_layer=layer_set[5])
-    dataset = 'cifar100'
-    main(model_dir, model_selection, dataset)
-
-    max_result = []
-    model_dir = '../hhjung/Proposed/cifar100/Resnet110b'
-    model_selection = ResNet(num_gate=7,num_classes=100,resnet_layer=layer_set[5])
-    dataset = 'cifar100'
-    main(model_dir, model_selection, dataset)
-
-    max_result = []
-    model_dir = '../hhjung/Proposed/cifar100/Resnet110c'
-    model_selection = ResNet(num_gate=7,num_classes=100,resnet_layer=layer_set[5])
-    dataset = 'cifar100'
-    main(model_dir, model_selection, dataset)
+    # max_result = []
+    # model_dir = '../hhjung/Proposed/cifar100/Resnet110x'
+    # model_selection = ResNet(num_gate=7,num_classes=100,resnet_layer=layer_set[5])
+    # dataset = 'cifar100'
+    # main(model_dir, model_selection, dataset)

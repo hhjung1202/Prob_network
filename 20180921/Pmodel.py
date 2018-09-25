@@ -318,21 +318,21 @@ class ResNet(nn.Module):
 
 
         self.layer1 = nn.Sequential()
-        self.layer1.add_module('layer1-0', BasicBlock(in_channels=16, out_channels=16, stride=1, downsample=None, num_gate=num_gate))
+        self.layer1.add_module('layer1_0', BasicBlock(in_channels=16, out_channels=16, stride=1, downsample=None, num_gate=num_gate))
         for i in range(1,self.n):
-            self.layer1.add_module('layer1-%d' % (i), BasicBlock(in_channels=16, out_channels=16, stride=1, downsample=None, num_gate=num_gate))
+            self.layer1.add_module('layer1_%d' % (i), BasicBlock(in_channels=16, out_channels=16, stride=1, downsample=None, num_gate=num_gate))
 
 
         self.layer2 = nn.Sequential()
-        self.layer2.add_module('layer2-0', BasicBlock(in_channels=16, out_channels=32, stride=2, downsample=True, num_gate=num_gate))
+        self.layer2.add_module('layer2_0', BasicBlock(in_channels=16, out_channels=32, stride=2, downsample=True, num_gate=num_gate))
         for i in range(1,self.n):
-            self.layer2.add_module('layer2-%d' % (i), BasicBlock(in_channels=32, out_channels=32, stride=1, downsample=None, num_gate=num_gate))
+            self.layer2.add_module('layer2_%d' % (i), BasicBlock(in_channels=32, out_channels=32, stride=1, downsample=None, num_gate=num_gate))
 
 
         self.layer3 = nn.Sequential()
-        self.layer3.add_module('layer3-0', BasicBlock(in_channels=32, out_channels=64, stride=2, downsample=True, num_gate=num_gate))
+        self.layer3.add_module('layer3_0', BasicBlock(in_channels=32, out_channels=64, stride=2, downsample=True, num_gate=num_gate))
         for i in range(1,self.n):
-            self.layer3.add_module('layer3-%d' % (i), BasicBlock(in_channels=64, out_channels=64, stride=1, downsample=None, num_gate=num_gate))
+            self.layer3.add_module('layer3_%d' % (i), BasicBlock(in_channels=64, out_channels=64, stride=1, downsample=None, num_gate=num_gate))
 
         
         self.avgpool = nn.AvgPool2d(kernel_size=8, stride=1)

@@ -2,15 +2,15 @@ import torch
 from torch.autograd import Variable
 import torch.optim as optim
 from torchvision import datasets, transforms
-from Pmodel import *
+from Pmodel_pruning import *
 import os
 import torch.backends.cudnn as cudnn
 import time
 import utils
 
-os.environ["CUDA_VISIBLE_DEVICES"] = '1'
+os.environ["CUDA_VISIBLE_DEVICES"] = '7'
 
-def main(model_dir, model, dataset):
+def main(model_dir, model, dataset, layer_n, reversed=False):
     utils.default_model_dir = model_dir
     utils.c = None
     utils.str_w = ''
@@ -47,42 +47,65 @@ def main(model_dir, model, dataset):
 
     utils.init_learning(model.module)
 
-    for epoch in range(start_epoch, 350):
-        if epoch < 150:
-            learning_rate = lr
-        elif epoch < 250:
-            learning_rate = lr * 0.1
-        else:
-            learning_rate = lr * 0.01
-        for param_group in optimizer.param_groups:
-            param_group['lr'] = learning_rate
+    # for epoch in range(start_epoch, 165): # change 165
+    #     if epoch < 80:
+    #         learning_rate = lr
+    #     elif epoch < 120:
+    #         learning_rate = lr * 0.1
+    #     else:
+    #         learning_rate = lr * 0.01
+    #     for param_group in optimizer.param_groups:
+    #         param_group['lr'] = learning_rate
 
-        train(model, optimizer, criterion, train_loader, epoch, True)
-        test(model, criterion, test_loader, epoch, True)
+    #     train(model, optimizer, criterion, train_loader, epoch, True)
+    #     test(model, criterion, test_loader, epoch, True)
 
-        utils.switching_learning(model.module)
-        print('switching_learning to Gate')
+    #     utils.switching_learning(model.module)
+    #     print('switching_learning to Gate')
         
-        train(model, optimizer, criterion, train_loader, epoch, False)
-        test(model, criterion, test_loader, epoch, False)        
+    #     train(model, optimizer, criterion, train_loader, epoch, False)
+    #     test(model, criterion, test_loader, epoch, False)        
 
-        utils.switching_learning(model.module)
-        print('switching_learning to Gate')
+    #     utils.switching_learning(model.module)
+    #     print('switching_learning to Gate')
 
-        if epoch % 5 == 0:
-            model_filename = 'checkpoint_%03d.pth.tar' % epoch
-            utils.save_checkpoint({
-                'epoch': epoch,
-                'model': model,
-                'state_dict': model.state_dict(),
-                'optimizer': optimizer.state_dict(),
-            }, model_filename, model_dir)
+    #     model_filename = 'checkpoint_%03d.pth.tar' % epoch
+    #     utils.save_checkpoint({
+    #         'epoch': epoch,
+    #         'model': model,
+    #         'state_dict': model.state_dict(),
+    #         'optimizer': optimizer.state_dict(),
+    #     }, model_filename, model_dir)
+    # now = time.gmtime(time.time() - start_time)
 
-    now = time.gmtime(time.time() - start_time)
-    weight_extract(model, optimizer, criterion, train_loader, epoch)
-    utils.conv_weight_L1_printing(model.module)
+    utils.del_csv_weight_for_test()
+            
+
+    weight_extract(model, optimizer, criterion, train_loader, 160)
+
+    class_counter, class_weight_sum, class_average, total_average = utils.load_gate_csv()
+
+    if reversed is True:
+        _, index = torch.sort(total_average, descending=True)
+    else:
+        _, index = torch.sort(total_average)
+    layer_name = utils.make_layer_name(layer_n)
+
+
+    for i in index:
+        # weight delete layer_name[i]
+        utils.weight_pruning_by_name(model.module, layer_name[i])
+        test(model, criterion, test_loader, 160, True)
+
+    # change index[0] to 'layerN and layerN-M'
+    # index about (smallest) index[0], index[1], .... (biggest)
+    # layer name change, layer0 to layer'n-1'
+    # find 'layer' + str(index[0]) from model.module
+    # and change self.z to 0
+
+    # utils.conv_weight_L1_printing(model.module)
     
-    print('{} hours {} mins {} secs for training'.format(now.tm_hour, now.tm_min, now.tm_sec))
+    # print('{} hours {} mins {} secs for training'.format(now.tm_hour, now.tm_min, now.tm_sec))
     
 
 def train(model, optimizer, criterion, train_loader, epoch, is_main):
@@ -179,36 +202,90 @@ def test(model, criterion, test_loader, epoch, is_main):
           .format(epoch, test_loss/(batch_idx+1), 100.*correct/total, correct, total, 100-100.*correct/total, max(max_result)))
 
 layer_set = [14, 20, 32, 44, 56, 110]
+layer_n_  =  [2,  3,  5,  7,  9,  18]
 
 if __name__=='__main__':
     
     max_result = []
-    model_dir = '../hhjung/Proposed/cifar10/Resnet14'
+    model_dir = '../hhjung/Proposed/backup2/cifar10/Resnet14'
     model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[0])
     dataset = 'cifar10'
-    main(model_dir, model_selection, dataset)
+    main(model_dir, model_selection, dataset, layer_n_[0])
+
+    max_result = []
+    model_dir = '../hhjung/Proposed/backup2/cifar10/Resnet14'
+    model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[0])
+    dataset = 'cifar10'
+    main(model_dir, model_selection, dataset, layer_n_[0], reversed=True)
     
     max_result = []
-    model_dir = '../hhjung/Proposed/cifar10/Resnet20'
+    model_dir = '../hhjung/Proposed/backup2/cifar10/Resnet20'
     model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[1])
     dataset = 'cifar10'
-    main(model_dir, model_selection, dataset)
+    main(model_dir, model_selection, dataset, layer_n_[1])
 
     max_result = []
-    model_dir = '../hhjung/Proposed/cifar10/Resnet32'
+    model_dir = '../hhjung/Proposed/backup2/cifar10/Resnet20'
+    model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[1])
+    dataset = 'cifar10'
+    main(model_dir, model_selection, dataset, layer_n_[1], reversed=True)
+
+    max_result = []
+    model_dir = '../hhjung/Proposed/backup2/cifar10/Resnet32'
     model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[2])
     dataset = 'cifar10'
-    main(model_dir, model_selection, dataset)
+    main(model_dir, model_selection, dataset, layer_n_[2])
 
     max_result = []
-    model_dir = '../hhjung/Proposed/cifar10/Resnet44'
+    model_dir = '../hhjung/Proposed/backup2/cifar10/Resnet32'
+    model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[2])
+    dataset = 'cifar10'
+    main(model_dir, model_selection, dataset, layer_n_[2], reversed=True)
+
+    max_result = []
+    model_dir = '../hhjung/Proposed/backup2/cifar10/Resnet44'
     model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[3])
     dataset = 'cifar10'
-    main(model_dir, model_selection, dataset)
+    main(model_dir, model_selection, dataset, layer_n_[3])
 
     max_result = []
-    model_dir = '../hhjung/Proposed/cifar10/Resnet56'
+    model_dir = '../hhjung/Proposed/backup2/cifar10/Resnet44'
+    model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[3])
+    dataset = 'cifar10'
+    main(model_dir, model_selection, dataset, layer_n_[3], reversed=True)
+
+    max_result = []
+    model_dir = '../hhjung/Proposed/backup2/cifar10/Resnet56'
     model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[4])
     dataset = 'cifar10'
-    main(model_dir, model_selection, dataset)
+    main(model_dir, model_selection, dataset, layer_n_[4])
 
+    max_result = []
+    model_dir = '../hhjung/Proposed/backup2/cifar10/Resnet56'
+    model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[4])
+    dataset = 'cifar10'
+    main(model_dir, model_selection, dataset, layer_n_[4], reversed=True)
+
+    max_result = []
+    model_dir = '../hhjung/Proposed/backup2/cifar10/Resnet110'
+    model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[5])
+    dataset = 'cifar10'
+    main(model_dir, model_selection, dataset, layer_n_[5])
+
+    max_result = []
+    model_dir = '../hhjung/Proposed/backup2/cifar10/Resnet110'
+    model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[5])
+    dataset = 'cifar10'
+    main(model_dir, model_selection, dataset, layer_n_[5], reversed=True)
+
+    max_result = []
+    model_dir = '../hhjung/Proposed/backup2/cifar10/Resnet110_350'
+    model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[5])
+    dataset = 'cifar10'
+    main(model_dir, model_selection, dataset, layer_n_[5])
+
+    max_result = []
+    model_dir = '../hhjung/Proposed/backup2/cifar10/Resnet110_350'
+    model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[5])
+    dataset = 'cifar10'
+    main(model_dir, model_selection, dataset, layer_n_[5], reversed=True)

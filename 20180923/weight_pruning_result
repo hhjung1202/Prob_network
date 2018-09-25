@@ -1,0 +1,497 @@
+cifar10 Data Loading ...
+Files already downloaded and verified
+USE 1 GPUs!
+=> loading checkpoint '../hhjung/Proposed/backup2/cifar10/Resnet14/checkpoint_160.pth.tar'
+/usr/local/lib/python3.5/dist-packages/torch/serialization.py:425: SourceChangeWarning: source code of class 'Pmodel._Gate7' has changed. you can retrieve the original source code by accessing the object's source attribute or set `torch.nn.Module.dump_patches = True` and use the patch tool to revert the changes.
+  warnings.warn(msg, SourceChangeWarning)
+Epoch: 160
+Epoch: 160
+Epoch: 160
+Epoch: 160
+Proposed_pruning.py:186: UserWarning: invalid index of a 0-dim tensor. This will be an error in PyTorch 0.5. Use tensor.item() to convert a 0-dim tensor to a Python number
+  test_loss += loss.data[0]
+# TEST : Epoch : 160 | Loss: (4.1406) | Acc: (34.00%) (3466/10000) | Err: (66.00% | Max: (3466))
+# TEST : Epoch : 160 | Loss: (16.8173) | Acc: (15.00%) (1592/10000) | Err: (85.00% | Max: (3466))
+# TEST : Epoch : 160 | Loss: (66.9545) | Acc: (10.00%) (1086/10000) | Err: (90.00% | Max: (3466))
+# TEST : Epoch : 160 | Loss: (85.7484) | Acc: (10.00%) (1024/10000) | Err: (90.00% | Max: (3466))
+# TEST : Epoch : 160 | Loss: (58.7853) | Acc: (11.00%) (1126/10000) | Err: (89.00% | Max: (3466))
+# TEST : Epoch : 160 | Loss: (17.2468) | Acc: (10.00%) (1013/10000) | Err: (90.00% | Max: (3466))
+cifar10 Data Loading ...
+Files already downloaded and verified
+USE 1 GPUs!
+=> loading checkpoint '../hhjung/Proposed/backup2/cifar10/Resnet14/checkpoint_160.pth.tar'
+delete weight_temp.csv
+Epoch: 160
+Epoch: 160
+Epoch: 160
+Epoch: 160
+# TEST : Epoch : 160 | Loss: (2.0452) | Acc: (22.00%) (2266/10000) | Err: (78.00% | Max: (2266))
+# TEST : Epoch : 160 | Loss: (2.4269) | Acc: (16.00%) (1648/10000) | Err: (84.00% | Max: (2266))
+# TEST : Epoch : 160 | Loss: (2.9597) | Acc: (12.00%) (1292/10000) | Err: (88.00% | Max: (2266))
+# TEST : Epoch : 160 | Loss: (3.2128) | Acc: (13.00%) (1308/10000) | Err: (87.00% | Max: (2266))
+# TEST : Epoch : 160 | Loss: (8.2295) | Acc: (12.00%) (1250/10000) | Err: (88.00% | Max: (2266))
+# TEST : Epoch : 160 | Loss: (16.8173) | Acc: (10.00%) (1015/10000) | Err: (90.00% | Max: (2266))
+cifar10 Data Loading ...
+Files already downloaded and verified
+USE 1 GPUs!
+=> loading checkpoint '../hhjung/Proposed/backup2/cifar10/Resnet20/checkpoint_160.pth.tar'
+Epoch: 160
+Epoch: 160
+Epoch: 160
+Epoch: 160
+# TEST : Epoch : 160 | Loss: (6.6960) | Acc: (19.00%) (1914/10000) | Err: (81.00% | Max: (1914))
+# TEST : Epoch : 160 | Loss: (8.5432) | Acc: (14.00%) (1442/10000) | Err: (86.00% | Max: (1914))
+# TEST : Epoch : 160 | Loss: (11.0019) | Acc: (12.00%) (1237/10000) | Err: (88.00% | Max: (1914))
+# TEST : Epoch : 160 | Loss: (45.7778) | Acc: (9.00%) (978/10000) | Err: (91.00% | Max: (1914))
+# TEST : Epoch : 160 | Loss: (196.0720) | Acc: (13.00%) (1317/10000) | Err: (87.00% | Max: (1914))
+# TEST : Epoch : 160 | Loss: (545.3300) | Acc: (11.00%) (1133/10000) | Err: (89.00% | Max: (1914))
+# TEST : Epoch : 160 | Loss: (545.3813) | Acc: (11.00%) (1135/10000) | Err: (89.00% | Max: (1914))
+# TEST : Epoch : 160 | Loss: (2852.9556) | Acc: (9.00%) (988/10000) | Err: (91.00% | Max: (1914))
+# TEST : Epoch : 160 | Loss: (318.8681) | Acc: (12.00%) (1252/10000) | Err: (88.00% | Max: (1914))
+cifar10 Data Loading ...
+Files already downloaded and verified
+USE 1 GPUs!
+=> loading checkpoint '../hhjung/Proposed/backup2/cifar10/Resnet20/checkpoint_160.pth.tar'
+delete weight_temp.csv
+Epoch: 160
+Epoch: 160
+Epoch: 160
+Epoch: 160
+# TEST : Epoch : 160 | Loss: (2.0931) | Acc: (14.00%) (1496/10000) | Err: (86.00% | Max: (1496))
+# TEST : Epoch : 160 | Loss: (2.2595) | Acc: (32.00%) (3210/10000) | Err: (68.00% | Max: (3210))
+# TEST : Epoch : 160 | Loss: (3.5619) | Acc: (25.00%) (2511/10000) | Err: (75.00% | Max: (3210))
+# TEST : Epoch : 160 | Loss: (5.3818) | Acc: (15.00%) (1541/10000) | Err: (85.00% | Max: (3210))
+# TEST : Epoch : 160 | Loss: (17.2916) | Acc: (11.00%) (1116/10000) | Err: (89.00% | Max: (3210))
+# TEST : Epoch : 160 | Loss: (47.1708) | Acc: (10.00%) (1096/10000) | Err: (90.00% | Max: (3210))
+# TEST : Epoch : 160 | Loss: (84.0370) | Acc: (11.00%) (1199/10000) | Err: (89.00% | Max: (3210))
+# TEST : Epoch : 160 | Loss: (175.8499) | Acc: (12.00%) (1249/10000) | Err: (88.00% | Max: (3210))
+# TEST : Epoch : 160 | Loss: (323.5607) | Acc: (12.00%) (1246/10000) | Err: (88.00% | Max: (3210))
+cifar10 Data Loading ...
+Files already downloaded and verified
+USE 1 GPUs!
+=> loading checkpoint '../hhjung/Proposed/backup2/cifar10/Resnet32/checkpoint_160.pth.tar'
+Epoch: 160
+Epoch: 160
+Epoch: 160
+Epoch: 160
+# TEST : Epoch : 160 | Loss: (1.3474) | Acc: (74.00%) (7460/10000) | Err: (26.00% | Max: (7460))
+# TEST : Epoch : 160 | Loss: (4.1333) | Acc: (43.00%) (4302/10000) | Err: (57.00% | Max: (7460))
+# TEST : Epoch : 160 | Loss: (6.7616) | Acc: (17.00%) (1709/10000) | Err: (83.00% | Max: (7460))
+# TEST : Epoch : 160 | Loss: (4.8493) | Acc: (12.00%) (1245/10000) | Err: (88.00% | Max: (7460))
+# TEST : Epoch : 160 | Loss: (26.6085) | Acc: (10.00%) (1027/10000) | Err: (90.00% | Max: (7460))
+# TEST : Epoch : 160 | Loss: (214.7528) | Acc: (10.00%) (1004/10000) | Err: (90.00% | Max: (7460))
+# TEST : Epoch : 160 | Loss: (313.1933) | Acc: (10.00%) (1006/10000) | Err: (90.00% | Max: (7460))
+# TEST : Epoch : 160 | Loss: (578.3135) | Acc: (10.00%) (1023/10000) | Err: (90.00% | Max: (7460))
+# TEST : Epoch : 160 | Loss: (1760.7811) | Acc: (8.00%) (875/10000) | Err: (92.00% | Max: (7460))
+# TEST : Epoch : 160 | Loss: (3384.8894) | Acc: (10.00%) (1004/10000) | Err: (90.00% | Max: (7460))
+# TEST : Epoch : 160 | Loss: (12199.1992) | Acc: (9.00%) (983/10000) | Err: (91.00% | Max: (7460))
+# TEST : Epoch : 160 | Loss: (33950.1641) | Acc: (7.00%) (734/10000) | Err: (93.00% | Max: (7460))
+# TEST : Epoch : 160 | Loss: (102758.1641) | Acc: (13.00%) (1365/10000) | Err: (87.00% | Max: (7460))
+# TEST : Epoch : 160 | Loss: (102758.1641) | Acc: (13.00%) (1365/10000) | Err: (87.00% | Max: (7460))
+# TEST : Epoch : 160 | Loss: (9981.1699) | Acc: (15.00%) (1509/10000) | Err: (85.00% | Max: (7460))
+cifar10 Data Loading ...
+Files already downloaded and verified
+USE 1 GPUs!
+=> loading checkpoint '../hhjung/Proposed/backup2/cifar10/Resnet32/checkpoint_160.pth.tar'
+delete weight_temp.csv
+Epoch: 160
+Epoch: 160
+Epoch: 160
+Epoch: 160
+# TEST : Epoch : 160 | Loss: (1.8099) | Acc: (34.00%) (3460/10000) | Err: (66.00% | Max: (3460))
+# TEST : Epoch : 160 | Loss: (2.5302) | Acc: (18.00%) (1814/10000) | Err: (82.00% | Max: (3460))
+# TEST : Epoch : 160 | Loss: (3.0448) | Acc: (14.00%) (1469/10000) | Err: (86.00% | Max: (3460))
+# TEST : Epoch : 160 | Loss: (4.6498) | Acc: (12.00%) (1263/10000) | Err: (88.00% | Max: (3460))
+# TEST : Epoch : 160 | Loss: (23.5549) | Acc: (9.00%) (960/10000) | Err: (91.00% | Max: (3460))
+# TEST : Epoch : 160 | Loss: (33.1480) | Acc: (7.00%) (712/10000) | Err: (93.00% | Max: (3460))
+# TEST : Epoch : 160 | Loss: (50.4974) | Acc: (8.00%) (834/10000) | Err: (92.00% | Max: (3460))
+# TEST : Epoch : 160 | Loss: (73.5197) | Acc: (14.00%) (1430/10000) | Err: (86.00% | Max: (3460))
+# TEST : Epoch : 160 | Loss: (101.2184) | Acc: (13.00%) (1331/10000) | Err: (87.00% | Max: (3460))
+# TEST : Epoch : 160 | Loss: (359.6502) | Acc: (15.00%) (1559/10000) | Err: (85.00% | Max: (3460))
+# TEST : Epoch : 160 | Loss: (1027.2644) | Acc: (15.00%) (1530/10000) | Err: (85.00% | Max: (3460))
+# TEST : Epoch : 160 | Loss: (2293.7517) | Acc: (15.00%) (1558/10000) | Err: (85.00% | Max: (3460))
+# TEST : Epoch : 160 | Loss: (4901.8975) | Acc: (15.00%) (1538/10000) | Err: (85.00% | Max: (3460))
+# TEST : Epoch : 160 | Loss: (9101.6865) | Acc: (15.00%) (1567/10000) | Err: (85.00% | Max: (3460))
+# TEST : Epoch : 160 | Loss: (9917.1494) | Acc: (15.00%) (1515/10000) | Err: (85.00% | Max: (3460))
+cifar10 Data Loading ...
+Files already downloaded and verified
+USE 1 GPUs!
+=> loading checkpoint '../hhjung/Proposed/backup2/cifar10/Resnet44/checkpoint_160.pth.tar'
+Epoch: 160
+Epoch: 160
+Epoch: 160
+Epoch: 160
+# TEST : Epoch : 160 | Loss: (0.6548) | Acc: (86.00%) (8652/10000) | Err: (14.00% | Max: (8652))
+# TEST : Epoch : 160 | Loss: (1.5808) | Acc: (67.00%) (6764/10000) | Err: (33.00% | Max: (8652))
+# TEST : Epoch : 160 | Loss: (4.8701) | Acc: (40.00%) (4058/10000) | Err: (60.00% | Max: (8652))
+# TEST : Epoch : 160 | Loss: (5.7752) | Acc: (9.00%) (966/10000) | Err: (91.00% | Max: (8652))
+# TEST : Epoch : 160 | Loss: (5.3531) | Acc: (7.00%) (773/10000) | Err: (93.00% | Max: (8652))
+# TEST : Epoch : 160 | Loss: (17.4568) | Acc: (11.00%) (1185/10000) | Err: (89.00% | Max: (8652))
+# TEST : Epoch : 160 | Loss: (62.7832) | Acc: (9.00%) (916/10000) | Err: (91.00% | Max: (8652))
+# TEST : Epoch : 160 | Loss: (130.9758) | Acc: (9.00%) (934/10000) | Err: (91.00% | Max: (8652))
+# TEST : Epoch : 160 | Loss: (489.5924) | Acc: (9.00%) (902/10000) | Err: (91.00% | Max: (8652))
+# TEST : Epoch : 160 | Loss: (760.9185) | Acc: (9.00%) (974/10000) | Err: (91.00% | Max: (8652))
+# TEST : Epoch : 160 | Loss: (1744.4945) | Acc: (9.00%) (988/10000) | Err: (91.00% | Max: (8652))
+# TEST : Epoch : 160 | Loss: (4100.4893) | Acc: (9.00%) (996/10000) | Err: (91.00% | Max: (8652))
+# TEST : Epoch : 160 | Loss: (7276.9756) | Acc: (10.00%) (1088/10000) | Err: (90.00% | Max: (8652))
+# TEST : Epoch : 160 | Loss: (5051.8872) | Acc: (9.00%) (928/10000) | Err: (91.00% | Max: (8652))
+# TEST : Epoch : 160 | Loss: (40169.2578) | Acc: (8.00%) (857/10000) | Err: (92.00% | Max: (8652))
+# TEST : Epoch : 160 | Loss: (112371.2656) | Acc: (9.00%) (922/10000) | Err: (91.00% | Max: (8652))
+# TEST : Epoch : 160 | Loss: (259196.1875) | Acc: (11.00%) (1187/10000) | Err: (89.00% | Max: (8652))
+# TEST : Epoch : 160 | Loss: (259196.1875) | Acc: (11.00%) (1187/10000) | Err: (89.00% | Max: (8652))
+# TEST : Epoch : 160 | Loss: (799571.5625) | Acc: (12.00%) (1208/10000) | Err: (88.00% | Max: (8652))
+# TEST : Epoch : 160 | Loss: (2612684.5000) | Acc: (12.00%) (1215/10000) | Err: (88.00% | Max: (8652))
+# TEST : Epoch : 160 | Loss: (302051.5625) | Acc: (12.00%) (1213/10000) | Err: (88.00% | Max: (8652))
+cifar10 Data Loading ...
+Files already downloaded and verified
+USE 1 GPUs!
+=> loading checkpoint '../hhjung/Proposed/backup2/cifar10/Resnet44/checkpoint_160.pth.tar'
+delete weight_temp.csv
+Epoch: 160
+Epoch: 160
+Epoch: 160
+Epoch: 160
+# TEST : Epoch : 160 | Loss: (1.8099) | Acc: (43.00%) (4327/10000) | Err: (57.00% | Max: (4327))
+# TEST : Epoch : 160 | Loss: (1.7178) | Acc: (42.00%) (4297/10000) | Err: (58.00% | Max: (4327))
+# TEST : Epoch : 160 | Loss: (3.0474) | Acc: (19.00%) (1990/10000) | Err: (81.00% | Max: (4327))
+# TEST : Epoch : 160 | Loss: (4.1183) | Acc: (10.00%) (1068/10000) | Err: (90.00% | Max: (4327))
+# TEST : Epoch : 160 | Loss: (11.5408) | Acc: (12.00%) (1223/10000) | Err: (88.00% | Max: (4327))
+# TEST : Epoch : 160 | Loss: (24.4466) | Acc: (12.00%) (1238/10000) | Err: (88.00% | Max: (4327))
+# TEST : Epoch : 160 | Loss: (49.7637) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4327))
+# TEST : Epoch : 160 | Loss: (37.9765) | Acc: (16.00%) (1664/10000) | Err: (84.00% | Max: (4327))
+# TEST : Epoch : 160 | Loss: (84.1045) | Acc: (10.00%) (1057/10000) | Err: (90.00% | Max: (4327))
+# TEST : Epoch : 160 | Loss: (264.9440) | Acc: (10.00%) (1009/10000) | Err: (90.00% | Max: (4327))
+# TEST : Epoch : 160 | Loss: (685.4866) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4327))
+# TEST : Epoch : 160 | Loss: (1359.5824) | Acc: (9.00%) (996/10000) | Err: (91.00% | Max: (4327))
+# TEST : Epoch : 160 | Loss: (3000.1841) | Acc: (9.00%) (998/10000) | Err: (91.00% | Max: (4327))
+# TEST : Epoch : 160 | Loss: (8799.6016) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4327))
+# TEST : Epoch : 160 | Loss: (16347.4658) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4327))
+# TEST : Epoch : 160 | Loss: (39854.7305) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4327))
+# TEST : Epoch : 160 | Loss: (76241.2812) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4327))
+# TEST : Epoch : 160 | Loss: (146754.7812) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4327))
+# TEST : Epoch : 160 | Loss: (284741.5938) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4327))
+# TEST : Epoch : 160 | Loss: (305429.5938) | Acc: (10.00%) (1032/10000) | Err: (90.00% | Max: (4327))
+# TEST : Epoch : 160 | Loss: (301485.7500) | Acc: (12.00%) (1208/10000) | Err: (88.00% | Max: (4327))
+cifar10 Data Loading ...
+Files already downloaded and verified
+USE 1 GPUs!
+=> loading checkpoint '../hhjung/Proposed/backup2/cifar10/Resnet56/checkpoint_160.pth.tar'
+Epoch: 160
+Epoch: 160
+Epoch: 160
+Epoch: 160
+# TEST : Epoch : 160 | Loss: (0.3310) | Acc: (93.00%) (9361/10000) | Err: (7.00% | Max: (9361))
+# TEST : Epoch : 160 | Loss: (0.3490) | Acc: (93.00%) (9348/10000) | Err: (7.00% | Max: (9361))
+# TEST : Epoch : 160 | Loss: (0.3828) | Acc: (93.00%) (9311/10000) | Err: (7.00% | Max: (9361))
+# TEST : Epoch : 160 | Loss: (0.5256) | Acc: (91.00%) (9193/10000) | Err: (9.00% | Max: (9361))
+# TEST : Epoch : 160 | Loss: (1.6484) | Acc: (85.00%) (8591/10000) | Err: (15.00% | Max: (9361))
+# TEST : Epoch : 160 | Loss: (23.8831) | Acc: (41.00%) (4142/10000) | Err: (59.00% | Max: (9361))
+# TEST : Epoch : 160 | Loss: (55.4678) | Acc: (24.00%) (2463/10000) | Err: (76.00% | Max: (9361))
+# TEST : Epoch : 160 | Loss: (144.0120) | Acc: (10.00%) (1085/10000) | Err: (90.00% | Max: (9361))
+# TEST : Epoch : 160 | Loss: (298.3354) | Acc: (10.00%) (1069/10000) | Err: (90.00% | Max: (9361))
+# TEST : Epoch : 160 | Loss: (644.1686) | Acc: (9.00%) (973/10000) | Err: (91.00% | Max: (9361))
+# TEST : Epoch : 160 | Loss: (1639.7316) | Acc: (9.00%) (995/10000) | Err: (91.00% | Max: (9361))
+# TEST : Epoch : 160 | Loss: (2409.5896) | Acc: (8.00%) (812/10000) | Err: (92.00% | Max: (9361))
+# TEST : Epoch : 160 | Loss: (4768.8555) | Acc: (8.00%) (814/10000) | Err: (92.00% | Max: (9361))
+# TEST : Epoch : 160 | Loss: (7163.2700) | Acc: (8.00%) (887/10000) | Err: (92.00% | Max: (9361))
+# TEST : Epoch : 160 | Loss: (9789.3096) | Acc: (9.00%) (980/10000) | Err: (91.00% | Max: (9361))
+# TEST : Epoch : 160 | Loss: (13427.8467) | Acc: (9.00%) (985/10000) | Err: (91.00% | Max: (9361))
+# TEST : Epoch : 160 | Loss: (23227.5918) | Acc: (9.00%) (998/10000) | Err: (91.00% | Max: (9361))
+# TEST : Epoch : 160 | Loss: (46356.8164) | Acc: (10.00%) (1003/10000) | Err: (90.00% | Max: (9361))
+# TEST : Epoch : 160 | Loss: (90478.0000) | Acc: (10.00%) (1002/10000) | Err: (90.00% | Max: (9361))
+# TEST : Epoch : 160 | Loss: (179528.3906) | Acc: (10.00%) (1002/10000) | Err: (90.00% | Max: (9361))
+# TEST : Epoch : 160 | Loss: (332338.2500) | Acc: (10.00%) (1002/10000) | Err: (90.00% | Max: (9361))
+# TEST : Epoch : 160 | Loss: (424796.1250) | Acc: (8.00%) (878/10000) | Err: (92.00% | Max: (9361))
+# TEST : Epoch : 160 | Loss: (860542.0000) | Acc: (8.00%) (805/10000) | Err: (92.00% | Max: (9361))
+# TEST : Epoch : 160 | Loss: (2018658.8750) | Acc: (8.00%) (815/10000) | Err: (92.00% | Max: (9361))
+# TEST : Epoch : 160 | Loss: (11514864.0000) | Acc: (9.00%) (996/10000) | Err: (91.00% | Max: (9361))
+# TEST : Epoch : 160 | Loss: (77870120.0000) | Acc: (10.00%) (1033/10000) | Err: (90.00% | Max: (9361))
+# TEST : Epoch : 160 | Loss: (77870120.0000) | Acc: (10.00%) (1033/10000) | Err: (90.00% | Max: (9361))
+cifar10 Data Loading ...
+Files already downloaded and verified
+USE 1 GPUs!
+=> loading checkpoint '../hhjung/Proposed/backup2/cifar10/Resnet56/checkpoint_160.pth.tar'
+delete weight_temp.csv
+Epoch: 160
+Epoch: 160
+Epoch: 160
+Epoch: 160
+# TEST : Epoch : 160 | Loss: (2.9611) | Acc: (52.00%) (5222/10000) | Err: (48.00% | Max: (5222))
+# TEST : Epoch : 160 | Loss: (7.3958) | Acc: (27.00%) (2757/10000) | Err: (73.00% | Max: (5222))
+# TEST : Epoch : 160 | Loss: (9.8566) | Acc: (12.00%) (1293/10000) | Err: (88.00% | Max: (5222))
+# TEST : Epoch : 160 | Loss: (10.9286) | Acc: (12.00%) (1227/10000) | Err: (88.00% | Max: (5222))
+# TEST : Epoch : 160 | Loss: (14.5465) | Acc: (8.00%) (828/10000) | Err: (92.00% | Max: (5222))
+# TEST : Epoch : 160 | Loss: (192.7139) | Acc: (9.00%) (970/10000) | Err: (91.00% | Max: (5222))
+# TEST : Epoch : 160 | Loss: (577.9426) | Acc: (10.00%) (1035/10000) | Err: (90.00% | Max: (5222))
+# TEST : Epoch : 160 | Loss: (1446.9087) | Acc: (10.00%) (1055/10000) | Err: (90.00% | Max: (5222))
+# TEST : Epoch : 160 | Loss: (3353.8225) | Acc: (10.00%) (1058/10000) | Err: (90.00% | Max: (5222))
+# TEST : Epoch : 160 | Loss: (8079.5981) | Acc: (10.00%) (1064/10000) | Err: (90.00% | Max: (5222))
+# TEST : Epoch : 160 | Loss: (16146.0205) | Acc: (10.00%) (1074/10000) | Err: (90.00% | Max: (5222))
+# TEST : Epoch : 160 | Loss: (34577.9141) | Acc: (10.00%) (1028/10000) | Err: (90.00% | Max: (5222))
+# TEST : Epoch : 160 | Loss: (69172.2656) | Acc: (10.00%) (1051/10000) | Err: (90.00% | Max: (5222))
+# TEST : Epoch : 160 | Loss: (158760.4219) | Acc: (10.00%) (1012/10000) | Err: (90.00% | Max: (5222))
+# TEST : Epoch : 160 | Loss: (302537.0000) | Acc: (10.00%) (1057/10000) | Err: (90.00% | Max: (5222))
+# TEST : Epoch : 160 | Loss: (600003.5625) | Acc: (10.00%) (1012/10000) | Err: (90.00% | Max: (5222))
+# TEST : Epoch : 160 | Loss: (1183808.3750) | Acc: (9.00%) (997/10000) | Err: (91.00% | Max: (5222))
+# TEST : Epoch : 160 | Loss: (2398358.0000) | Acc: (9.00%) (979/10000) | Err: (91.00% | Max: (5222))
+# TEST : Epoch : 160 | Loss: (5114604.0000) | Acc: (10.00%) (1052/10000) | Err: (90.00% | Max: (5222))
+# TEST : Epoch : 160 | Loss: (5163869.5000) | Acc: (10.00%) (1051/10000) | Err: (90.00% | Max: (5222))
+# TEST : Epoch : 160 | Loss: (11981393.0000) | Acc: (10.00%) (1031/10000) | Err: (90.00% | Max: (5222))
+# TEST : Epoch : 160 | Loss: (12157536.0000) | Acc: (11.00%) (1143/10000) | Err: (89.00% | Max: (5222))
+# TEST : Epoch : 160 | Loss: (11487092.0000) | Acc: (10.00%) (1070/10000) | Err: (90.00% | Max: (5222))
+# TEST : Epoch : 160 | Loss: (10259997.0000) | Acc: (8.00%) (855/10000) | Err: (92.00% | Max: (5222))
+# TEST : Epoch : 160 | Loss: (10259997.0000) | Acc: (8.00%) (855/10000) | Err: (92.00% | Max: (5222))
+# TEST : Epoch : 160 | Loss: (41332700.0000) | Acc: (10.00%) (1079/10000) | Err: (90.00% | Max: (5222))
+# TEST : Epoch : 160 | Loss: (77045096.0000) | Acc: (10.00%) (1033/10000) | Err: (90.00% | Max: (5222))
+cifar10 Data Loading ...
+Files already downloaded and verified
+USE 1 GPUs!
+=> loading checkpoint '../hhjung/Proposed/backup2/cifar10/Resnet110/checkpoint_160.pth.tar'
+Epoch: 160
+Epoch: 160
+Epoch: 160
+Epoch: 160
+Proposed_pruning.py:186: UserWarning: invalid index of a 0-dim tensor. This will be an error in PyTorch 0.5. Use tensor.item() to convert a 0-dim tensor to a Python number
+  test_loss += loss.data[0]
+# TEST : Epoch : 160 | Loss: (0.3352) | Acc: (93.00%) (9399/10000) | Err: (7.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (0.5249) | Acc: (90.00%) (9036/10000) | Err: (10.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (0.6910) | Acc: (89.00%) (8913/10000) | Err: (11.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (3.0676) | Acc: (64.00%) (6401/10000) | Err: (36.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (8.9463) | Acc: (35.00%) (3594/10000) | Err: (65.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (9.5341) | Acc: (17.00%) (1716/10000) | Err: (83.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (9.6434) | Acc: (10.00%) (1034/10000) | Err: (90.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (22.4441) | Acc: (9.00%) (963/10000) | Err: (91.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (342.2096) | Acc: (10.00%) (1001/10000) | Err: (90.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (334.7848) | Acc: (10.00%) (1002/10000) | Err: (90.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (1305.0327) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (2666.0710) | Acc: (10.00%) (1001/10000) | Err: (90.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (3039.8496) | Acc: (8.00%) (877/10000) | Err: (92.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (5571.3301) | Acc: (9.00%) (995/10000) | Err: (91.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (12137.0039) | Acc: (10.00%) (1001/10000) | Err: (90.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (25515.6680) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (35993.1602) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (51751.2500) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (76168.4844) | Acc: (9.00%) (999/10000) | Err: (91.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (72321.9922) | Acc: (10.00%) (1048/10000) | Err: (90.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (116744.3594) | Acc: (11.00%) (1120/10000) | Err: (89.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (215672.4688) | Acc: (9.00%) (922/10000) | Err: (91.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (2211957.2500) | Acc: (9.00%) (979/10000) | Err: (91.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (5442220.0000) | Acc: (10.00%) (1003/10000) | Err: (90.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (11560854.0000) | Acc: (9.00%) (999/10000) | Err: (91.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (21803418.0000) | Acc: (9.00%) (970/10000) | Err: (91.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (32121400.0000) | Acc: (9.00%) (985/10000) | Err: (91.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (45008280.0000) | Acc: (9.00%) (998/10000) | Err: (91.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (50689420.0000) | Acc: (10.00%) (1026/10000) | Err: (90.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (69780256.0000) | Acc: (10.00%) (1012/10000) | Err: (90.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (128420280.0000) | Acc: (9.00%) (994/10000) | Err: (91.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (243535312.0000) | Acc: (9.00%) (972/10000) | Err: (91.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (443547296.0000) | Acc: (10.00%) (1051/10000) | Err: (90.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (1494807424.0000) | Acc: (9.00%) (958/10000) | Err: (91.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (3923995136.0000) | Acc: (9.00%) (977/10000) | Err: (91.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (9096073216.0000) | Acc: (10.00%) (1001/10000) | Err: (90.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (20800976896.0000) | Acc: (10.00%) (1001/10000) | Err: (90.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (48168828928.0000) | Acc: (9.00%) (998/10000) | Err: (91.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (91496185856.0000) | Acc: (9.00%) (998/10000) | Err: (91.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (172175589376.0000) | Acc: (9.00%) (997/10000) | Err: (91.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (397883965440.0000) | Acc: (9.00%) (997/10000) | Err: (91.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (805427675136.0000) | Acc: (10.00%) (1005/10000) | Err: (90.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (1411779526656.0000) | Acc: (9.00%) (997/10000) | Err: (91.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (2219153293312.0000) | Acc: (11.00%) (1163/10000) | Err: (89.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (5695229394944.0000) | Acc: (11.00%) (1145/10000) | Err: (89.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (11928243011584.0000) | Acc: (9.00%) (909/10000) | Err: (91.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (34234448216064.0000) | Acc: (11.00%) (1124/10000) | Err: (89.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (72198148587520.0000) | Acc: (11.00%) (1102/10000) | Err: (89.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (239437329989632.0000) | Acc: (10.00%) (1048/10000) | Err: (90.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (1220394019192832.0000) | Acc: (8.00%) (866/10000) | Err: (92.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (1151248535388160.0000) | Acc: (10.00%) (1009/10000) | Err: (90.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (9450012530442240.0000) | Acc: (11.00%) (1127/10000) | Err: (89.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (1555153970790400.0000) | Acc: (13.00%) (1319/10000) | Err: (87.00% | Max: (9399))
+# TEST : Epoch : 160 | Loss: (2325097188687872.0000) | Acc: (13.00%) (1326/10000) | Err: (87.00% | Max: (9399))
+cifar10 Data Loading ...
+Files already downloaded and verified
+USE 1 GPUs!
+=> loading checkpoint '../hhjung/Proposed/backup2/cifar10/Resnet110/checkpoint_160.pth.tar'
+delete weight_temp.csv
+Epoch: 160
+Epoch: 160
+Epoch: 160
+Epoch: 160
+# TEST : Epoch : 160 | Loss: (3.5409) | Acc: (41.00%) (4182/10000) | Err: (59.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (5.7440) | Acc: (25.00%) (2571/10000) | Err: (75.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (5.2739) | Acc: (16.00%) (1683/10000) | Err: (84.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (5.6406) | Acc: (10.00%) (1027/10000) | Err: (90.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (9.7561) | Acc: (11.00%) (1165/10000) | Err: (89.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (11.7727) | Acc: (9.00%) (972/10000) | Err: (91.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (10.0215) | Acc: (9.00%) (945/10000) | Err: (91.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (10.5323) | Acc: (10.00%) (1060/10000) | Err: (90.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (11.0030) | Acc: (11.00%) (1170/10000) | Err: (89.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (12.8986) | Acc: (11.00%) (1187/10000) | Err: (89.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (21.8998) | Acc: (10.00%) (1078/10000) | Err: (90.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (57.3887) | Acc: (10.00%) (1099/10000) | Err: (90.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (120.5905) | Acc: (10.00%) (1075/10000) | Err: (90.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (241.6495) | Acc: (10.00%) (1084/10000) | Err: (90.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (495.6134) | Acc: (10.00%) (1075/10000) | Err: (90.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (1011.5908) | Acc: (10.00%) (1068/10000) | Err: (90.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (2065.8638) | Acc: (10.00%) (1056/10000) | Err: (90.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (4556.7681) | Acc: (10.00%) (1055/10000) | Err: (90.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (10708.7422) | Acc: (10.00%) (1059/10000) | Err: (90.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (17190.9102) | Acc: (10.00%) (1090/10000) | Err: (90.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (37736.3711) | Acc: (10.00%) (1028/10000) | Err: (90.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (93764.8047) | Acc: (10.00%) (1085/10000) | Err: (90.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (191777.2188) | Acc: (10.00%) (1049/10000) | Err: (90.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (404434.6562) | Acc: (10.00%) (1050/10000) | Err: (90.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (756652.1250) | Acc: (9.00%) (915/10000) | Err: (91.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (2102653.0000) | Acc: (9.00%) (917/10000) | Err: (91.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (6650579.5000) | Acc: (8.00%) (878/10000) | Err: (92.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (10996705.0000) | Acc: (9.00%) (923/10000) | Err: (91.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (22884954.0000) | Acc: (9.00%) (909/10000) | Err: (91.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (28764748.0000) | Acc: (10.00%) (1015/10000) | Err: (90.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (62574108.0000) | Acc: (10.00%) (1075/10000) | Err: (90.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (131744016.0000) | Acc: (10.00%) (1016/10000) | Err: (90.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (194882080.0000) | Acc: (12.00%) (1274/10000) | Err: (88.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (382385120.0000) | Acc: (12.00%) (1218/10000) | Err: (88.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (775094912.0000) | Acc: (11.00%) (1111/10000) | Err: (89.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (1600745216.0000) | Acc: (11.00%) (1151/10000) | Err: (89.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (3303039744.0000) | Acc: (11.00%) (1148/10000) | Err: (89.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (6732291584.0000) | Acc: (11.00%) (1102/10000) | Err: (89.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (12077542400.0000) | Acc: (11.00%) (1145/10000) | Err: (89.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (23993673728.0000) | Acc: (11.00%) (1109/10000) | Err: (89.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (52638060544.0000) | Acc: (10.00%) (1044/10000) | Err: (90.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (119990771712.0000) | Acc: (10.00%) (1073/10000) | Err: (90.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (310404251648.0000) | Acc: (9.00%) (996/10000) | Err: (91.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (1114152763392.0000) | Acc: (8.00%) (881/10000) | Err: (92.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (1114035191808.0000) | Acc: (8.00%) (882/10000) | Err: (92.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (9656787271680.0000) | Acc: (8.00%) (851/10000) | Err: (92.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (16194989981696.0000) | Acc: (8.00%) (834/10000) | Err: (92.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (34192698114048.0000) | Acc: (8.00%) (802/10000) | Err: (92.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (119236135485440.0000) | Acc: (12.00%) (1219/10000) | Err: (88.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (427504435200000.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (858043130576896.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (1681862485344256.0000) | Acc: (10.00%) (1016/10000) | Err: (90.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (2015095173414912.0000) | Acc: (10.00%) (1073/10000) | Err: (90.00% | Max: (4182))
+# TEST : Epoch : 160 | Loss: (2316319080841216.0000) | Acc: (12.00%) (1297/10000) | Err: (88.00% | Max: (4182))
+cifar10 Data Loading ...
+Files already downloaded and verified
+USE 1 GPUs!
+=> loading checkpoint '../hhjung/Proposed/backup2/cifar10/Resnet110_350/checkpoint_345.pth.tar'
+Epoch: 160
+Epoch: 160
+Epoch: 160
+Epoch: 160
+# TEST : Epoch : 160 | Loss: (1.0009) | Acc: (81.00%) (8117/10000) | Err: (19.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (2.6739) | Acc: (56.00%) (5669/10000) | Err: (44.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (2.5003) | Acc: (51.00%) (5119/10000) | Err: (49.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (5.8992) | Acc: (21.00%) (2126/10000) | Err: (79.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (6.5112) | Acc: (10.00%) (1040/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (7.2400) | Acc: (9.00%) (978/10000) | Err: (91.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (8.9305) | Acc: (10.00%) (1040/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (33.0901) | Acc: (9.00%) (998/10000) | Err: (91.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (82.5090) | Acc: (10.00%) (1001/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (300.6405) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (749.2437) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (1388.4838) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (2657.2771) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (4622.3789) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (7951.3687) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (16203.6836) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (37016.5781) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (101299.9297) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (165246.7812) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (344142.3125) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (1481765.8750) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (2728271.2500) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (5853927.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (8873355.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (15428715.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (28275696.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (54603376.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (98087240.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (190275248.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (368510240.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (720300096.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (1443866112.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (4714593792.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (9563502592.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (25107091456.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (52173152256.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (119184154624.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (405587132416.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (728618500096.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (1454145536000.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (4028612214784.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (8058681425920.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (16581736267776.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (25773318602752.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (20632926420992.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (84139860557824.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (152662465052672.0000) | Acc: (9.00%) (912/10000) | Err: (91.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (374560071352320.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (1030798392164352.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (3503318387130368.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (1357393006952448.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (2429465967722496.0000) | Acc: (8.00%) (800/10000) | Err: (92.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (12488373327364096.0000) | Acc: (8.00%) (856/10000) | Err: (92.00% | Max: (8117))
+# TEST : Epoch : 160 | Loss: (2739537373560832.0000) | Acc: (14.00%) (1456/10000) | Err: (86.00% | Max: (8117))
+cifar10 Data Loading ...
+Files already downloaded and verified
+USE 1 GPUs!
+=> loading checkpoint '../hhjung/Proposed/backup2/cifar10/Resnet110_350/checkpoint_345.pth.tar'
+delete weight_temp.csv
+Epoch: 160
+Epoch: 160
+Epoch: 160
+Epoch: 160
+# TEST : Epoch : 160 | Loss: (2.1726) | Acc: (18.00%) (1842/10000) | Err: (82.00% | Max: (1842))
+# TEST : Epoch : 160 | Loss: (1.3748) | Acc: (48.00%) (4858/10000) | Err: (52.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (2.7364) | Acc: (27.00%) (2733/10000) | Err: (73.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (5.5647) | Acc: (12.00%) (1278/10000) | Err: (88.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (6.8436) | Acc: (10.00%) (1006/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (8.9207) | Acc: (9.00%) (997/10000) | Err: (91.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (15.4603) | Acc: (11.00%) (1143/10000) | Err: (89.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (49.9644) | Acc: (8.00%) (862/10000) | Err: (92.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (150.3327) | Acc: (10.00%) (1039/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (321.4395) | Acc: (10.00%) (1081/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (372.2353) | Acc: (11.00%) (1127/10000) | Err: (89.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (771.5806) | Acc: (10.00%) (1071/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (2051.6060) | Acc: (8.00%) (897/10000) | Err: (92.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (5055.9224) | Acc: (9.00%) (932/10000) | Err: (91.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (11359.0088) | Acc: (10.00%) (1012/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (21522.6152) | Acc: (9.00%) (920/10000) | Err: (91.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (44720.0117) | Acc: (9.00%) (933/10000) | Err: (91.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (52712.2188) | Acc: (9.00%) (936/10000) | Err: (91.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (88153.9062) | Acc: (9.00%) (923/10000) | Err: (91.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (165461.8750) | Acc: (9.00%) (900/10000) | Err: (91.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (322579.3125) | Acc: (9.00%) (999/10000) | Err: (91.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (776789.9375) | Acc: (10.00%) (1001/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (1680194.6250) | Acc: (9.00%) (999/10000) | Err: (91.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (2875209.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (5833924.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (11816623.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (25456758.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (51708152.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (99846456.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (186542416.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (371362016.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (722013888.0000) | Acc: (10.00%) (1004/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (1437992192.0000) | Acc: (10.00%) (1002/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (2893034240.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (5430545408.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (10092246016.0000) | Acc: (10.00%) (1001/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (19698515968.0000) | Acc: (10.00%) (1001/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (37542072320.0000) | Acc: (10.00%) (1004/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (79515172864.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (145895571456.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (290184429568.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (580521033728.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (1298102091776.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (2591012945920.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (4910377074688.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (9414711967744.0000) | Acc: (10.00%) (1001/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (26615207690240.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (39681999765504.0000) | Acc: (10.00%) (1025/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (112930720841728.0000) | Acc: (9.00%) (981/10000) | Err: (91.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (237027366797312.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (471968788774912.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (1082810446118912.0000) | Acc: (10.00%) (1000/10000) | Err: (90.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (1328292321820672.0000) | Acc: (12.00%) (1201/10000) | Err: (88.00% | Max: (4858))
+# TEST : Epoch : 160 | Loss: (2763942183043072.0000) | Acc: (14.00%) (1446/10000) | Err: (86.00% | Max: (4858))

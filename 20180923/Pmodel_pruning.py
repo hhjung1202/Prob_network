@@ -220,6 +220,7 @@ class _Gate7(nn.Sequential):
     phase = 2
     def __init__(self, channels, reduction, num_route):
         super(_Gate7, self).__init__()
+        self.onoff = False
         self.num_route = num_route
         self.avg_pool = nn.AdaptiveAvgPool2d(1)
         self.fc1 = nn.Linear(2 * channels, reduction, bias=False)
@@ -242,7 +243,10 @@ class _Gate7(nn.Sequential):
         q = out[:,1:,:,:] # batch, 1, 1, 1
 
         self.p = p.view(-1) / (p.view(-1) + q.view(-1))
-        self.z = p / (p + q)
+        if self.onoff is True:
+            self.z = 0
+        else:    
+            self.z = p / (p + q)
         return x * self.z + res * (1 - self.z)
 
 

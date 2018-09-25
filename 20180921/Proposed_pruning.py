@@ -10,7 +10,7 @@ import utils
 
 os.environ["CUDA_VISIBLE_DEVICES"] = '1'
 
-def main(model_dir, model, dataset):
+def main(model_dir, model, dataset, layer_name, layer_n):
     utils.default_model_dir = model_dir
     utils.c = None
     utils.str_w = ''
@@ -84,6 +84,14 @@ def main(model_dir, model, dataset):
     class_counter, class_weight_sum, class_average, total_average = utils.load_gate_csv()
 
     _, index = torch.sort(total_average)
+    layer_name = utils.make_layer_name(layer_n)
+
+    for i in index:
+        # weight delete layer_name[i]
+        utils.weight_pruning_by_name(model.module, layer_name[i])
+        test(model, criterion, test_loader, epoch, True)
+
+    change index[0] to 'layerN and layerN-M'
     # index about (smallest) index[0], index[1], .... (biggest)
     # layer name change, layer0 to layer'n-1'
     # find 'layer' + str(index[0]) from model.module
@@ -188,6 +196,7 @@ def test(model, criterion, test_loader, epoch, is_main):
           .format(epoch, test_loss/(batch_idx+1), 100.*correct/total, correct, total, 100-100.*correct/total, max(max_result)))
 
 layer_set = [14, 20, 32, 44, 56, 110]
+layer_n_  =  [2,  3,  5,  7,  9,  18]
 
 if __name__=='__main__':
     
@@ -195,29 +204,29 @@ if __name__=='__main__':
     model_dir = '../hhjung/Proposed/cifar10/Resnet14'
     model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[0])
     dataset = 'cifar10'
-    main(model_dir, model_selection, dataset)
+    main(model_dir, model_selection, dataset, layer_n_[0])
     
     max_result = []
     model_dir = '../hhjung/Proposed/cifar10/Resnet20'
     model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[1])
     dataset = 'cifar10'
-    main(model_dir, model_selection, dataset)
+    main(model_dir, model_selection, dataset, layer_n_[1])
 
     max_result = []
     model_dir = '../hhjung/Proposed/cifar10/Resnet32'
     model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[2])
     dataset = 'cifar10'
-    main(model_dir, model_selection, dataset)
+    main(model_dir, model_selection, dataset, layer_n_[2])
 
     max_result = []
     model_dir = '../hhjung/Proposed/cifar10/Resnet44'
     model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[3])
     dataset = 'cifar10'
-    main(model_dir, model_selection, dataset)
+    main(model_dir, model_selection, dataset, layer_n_[3])
 
     max_result = []
     model_dir = '../hhjung/Proposed/cifar10/Resnet56'
     model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[4])
     dataset = 'cifar10'
-    main(model_dir, model_selection, dataset)
+    main(model_dir, model_selection, dataset, layer_n_[4])
 

@@ -8,6 +8,7 @@ from operator import add
 default_model_dir = "./"
 c = None
 str_w = ''
+csv_file_name = 'weight_temp.csv'
 
 def get_num_gen(gen):
     return sum(1 for x in gen)
@@ -197,15 +198,21 @@ def save_to_csv():
     if not os.path.exists(default_model_dir):
         os.makedirs(default_model_dir)
 
-    model_filename = os.path.join(default_model_dir, 'weight.csv')
+    model_filename = os.path.join(default_model_dir, csv_file_name)
     with open(model_filename, 'a') as fout:
         fout.write(str_w)
+
+def del_csv_weight_for_test():
+    model_filename = os.path.join(default_model_dir, csv_file_name)
+    if os.path.exists(model_filename):
+        os.remove(model_filename)
+        print('delete ', csv_file_name)
 
 def load_gate_csv():
     class_counter = {} # {0: 5000, 1: 5000, ...}
     class_weight_sum = {} # {0: [, , , , , ], 1: [, , , , , ], ...}
 
-    model_filename = os.path.join(default_model_dir, 'weight.csv')
+    model_filename = os.path.join(default_model_dir, csv_file_name)
     with open(model_filename, newline="") as csvfile:
             spam = csv.reader(csvfile)
             for row in spam:
@@ -245,12 +252,13 @@ def make_layer_name(layer_n):
     str_name = []
     for j in range(1,4):
         for i in range(layer_n):
-            str_name.append(('layer%d' % (j), 'layer%d-%d' % (j, i)))
+            str_name.append(('layer%d' % (j), 'layer%d_%d' % (j, i)))
     return str_name
 
 def weight_pruning_by_name(model, layer_info):
     parent, child = layer_info
-    exec('model.{}.{}.gate.z = 1'.format(str(parent), str(child))
+    exec('print(model.{}.{}.gate)'.format(str(parent), str(child)))
+    exec('model.{}.{}.gate.onoff = True'.format(str(parent), str(child)))
 
 def cifar10_loader():
     batch_size = 128

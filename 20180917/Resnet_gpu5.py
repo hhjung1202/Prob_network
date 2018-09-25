@@ -8,7 +8,7 @@ import torch.backends.cudnn as cudnn
 import time
 import utils
 
-os.environ["CUDA_VISIBLE_DEVICES"] = '4'
+os.environ["CUDA_VISIBLE_DEVICES"] = '5'
 
 def main(model_dir, model, dataset):
     utils.default_model_dir = model_dir
@@ -127,37 +127,37 @@ layer_set = [14, 20, 32, 44, 56, 110]
 if __name__=='__main__':
     
     # max_result = []
-    # model_dir = '../hhjung/Basemodel/cifar100/Resnet14'
+    # model_dir = '../hhjung/Basemodel/cifar100/Resnet14a'
     # model_selection = ResNet(num_classes=100, resnet_layer=layer_set[0])
     # dataset = 'cifar100'
     # main(model_dir, model_selection, dataset)
 
     # max_result = []
-    # model_dir = '../hhjung/Basemodel/cifar100/Resnet20'
+    # model_dir = '../hhjung/Basemodel/cifar100/Resnet20a'
     # model_selection = ResNet(num_classes=100, resnet_layer=layer_set[1])
     # dataset = 'cifar100'
     # main(model_dir, model_selection, dataset)
     
     # max_result = []
-    # model_dir = '../hhjung/Basemodel/cifar100/Resnet32'
+    # model_dir = '../hhjung/Basemodel/cifar100/Resnet32a'
     # model_selection = ResNet(num_classes=100, resnet_layer=layer_set[2])
     # dataset = 'cifar100'
     # main(model_dir, model_selection, dataset)
 
     # max_result = []
-    # model_dir = '../hhjung/Basemodel/cifar100/Resnet44'
+    # model_dir = '../hhjung/Basemodel/cifar100/Resnet44a'
     # model_selection = ResNet(num_classes=100, resnet_layer=layer_set[3])
     # dataset = 'cifar100'
     # main(model_dir, model_selection, dataset)
 
     # max_result = []
-    # model_dir = '../hhjung/Basemodel/cifar100/Resnet56'
+    # model_dir = '../hhjung/Basemodel/cifar100/Resnet56a'
     # model_selection = ResNet(num_classes=100, resnet_layer=layer_set[4])
     # dataset = 'cifar100'
     # main(model_dir, model_selection, dataset)
 
     # max_result = []
-    # model_dir = '../hhjung/Basemodel/cifar100/Resnet110'
+    # model_dir = '../hhjung/Basemodel/cifar100/Resnet110a'
     # model_selection = ResNet(num_classes=100, resnet_layer=layer_set[5])
     # dataset = 'cifar100'
     # main(model_dir, model_selection, dataset)
@@ -165,37 +165,37 @@ if __name__=='__main__':
     # # 
 
     # max_result = []
-    # model_dir = '../hhjung/Basemodel/cifar10/Resnet14'
+    # model_dir = '../hhjung/Basemodel/cifar10/Resnet14a'
     # model_selection = ResNet(num_classes=10, resnet_layer=layer_set[0])
     # dataset = 'cifar10'
     # main(model_dir, model_selection, dataset)
 
     # max_result = []
-    # model_dir = '../hhjung/Basemodel/cifar10/Resnet20'
+    # model_dir = '../hhjung/Basemodel/cifar10/Resnet20a'
     # model_selection = ResNet(num_classes=10, resnet_layer=layer_set[1])
     # dataset = 'cifar10'
     # main(model_dir, model_selection, dataset)
     
     # max_result = []
-    # model_dir = '../hhjung/Basemodel/cifar10/Resnet32'
+    # model_dir = '../hhjung/Basemodel/cifar10/Resnet32a'
     # model_selection = ResNet(num_classes=10, resnet_layer=layer_set[2])
     # dataset = 'cifar10'
     # main(model_dir, model_selection, dataset)
 
     # max_result = []
-    # model_dir = '../hhjung/Basemodel/cifar10/Resnet44'
+    # model_dir = '../hhjung/Basemodel/cifar10/Resnet44a'
     # model_selection = ResNet(num_classes=10, resnet_layer=layer_set[3])
     # dataset = 'cifar10'
     # main(model_dir, model_selection, dataset)
 
     # max_result = []
-    # model_dir = '../hhjung/Basemodel/cifar10/Resnet56'
+    # model_dir = '../hhjung/Basemodel/cifar10/Resnet56a'
     # model_selection = ResNet(num_classes=10, resnet_layer=layer_set[4])
     # dataset = 'cifar10'
     # main(model_dir, model_selection, dataset)
 
     max_result = []
-    model_dir = '../hhjung/Basemodel/cifar10/Resnet110'
+    model_dir = '../hhjung/Basemodel/cifar10/Resnet110a'
     model_selection = ResNet(num_classes=10, resnet_layer=layer_set[5])
     dataset = 'cifar10'
     main(model_dir, model_selection, dataset)
