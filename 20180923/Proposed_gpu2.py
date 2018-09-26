@@ -47,10 +47,10 @@ def main(model_dir, model, dataset):
 
     utils.init_learning(model.module)
 
-    for epoch in range(start_epoch, 240):
-        if epoch < 120:
+    for epoch in range(start_epoch, 350):
+        if epoch < 150:
             learning_rate = lr
-        elif epoch < 180:
+        elif epoch < 250:
             learning_rate = lr * 0.1
         else:
             learning_rate = lr * 0.01
@@ -180,28 +180,18 @@ def test(model, criterion, test_loader, epoch, is_main):
 
 layer_set = [14, 20, 32, 44, 56, 110]
 
+
+def do_learning(model_dir, db, layer, num_gate=7):
+    max_result = []
+    model_selection = ResNet(num_gate=num_gate,num_classes=db,resnet_layer=layer)
+    dataset = 'cifar' + str(db)
+    main(model_dir, model_selection, dataset)
+
 if __name__=='__main__':
     
-    max_result = []
-    model_dir = '../hhjung/Proposed/cifar10/Resnet110n_'
-    model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[5])
-    dataset = 'cifar10'
-    main(model_dir, model_selection, dataset)
-    
-    max_result = []
-    model_dir = '../hhjung/Proposed/cifar10/Resnet110m_'
-    model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[5])
-    dataset = 'cifar10'
-    main(model_dir, model_selection, dataset)
+    for i in range(10):
+        # model_dir = '../hhjung/Proposed/cifar10/Resnet110_' + str(i)
+        # do_learning(model_dir, 10, layer_set[5], num_gate=7)
 
-    max_result = []
-    model_dir = '../hhjung/Proposed/cifar10/Resnet110o_'
-    model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[5])
-    dataset = 'cifar10'
-    main(model_dir, model_selection, dataset)
-
-    max_result = []
-    model_dir = '../hhjung/Proposed/cifar10/Resnet110p_'
-    model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[5])
-    dataset = 'cifar10'
-    main(model_dir, model_selection, dataset)
+        model_dir = '../hhjung/Proposed/cifar100/Resnet110_' + str(i)
+        do_learning(model_dir, 100, layer_set[5], num_gate=7)

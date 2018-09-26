@@ -26,6 +26,29 @@ class _Gate(nn.Sequential):
         out = self.sigmoid(self.fc2(out))
         out = out.permute(0, 3, 1, 2) # batch, n+1(=num_route), 1, 1
 
+        arr = []
+        arr.append(x[:,:self.num_init_features,:,:]) # 0 ~ 15
+        start = self.num_init_features
+        for i in range(self.num_route - 1):
+            arr.append(x[:,start:start+self.growth_rate,:,:]) # 16:28
+            start += self.growth_rate
+
+        self.p_set = []
+        p_sum = None
+        # multiply p's
+        for i in range(self.num_route):
+            self.p_set.append(out[:,i:i+1,:,:])
+            if p_sum is None:
+                p_sum = out[:,i:i+1,:,:]
+            else:
+                p_sum = p_sum + out[:,i:i+1,:,:]
+
+        for i in range(self.num_route):
+            self.p_set[i] = self.p_set[i] / p_sum * self.num_route
+            arr[i] = arr[i] * self.p_set[i]
+
+        return torch.cat(*arr, 1)
+
         # split x into 16, 12, 12, ... , 12
         # multiply p's
         p = out[:,:1,:,:] # batch, 1, 1, 1

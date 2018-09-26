@@ -8,7 +8,7 @@ from operator import add
 default_model_dir = "./"
 c = None
 str_w = ''
-csv_file_name = 'weight_temp.csv'
+csv_file_name = 'weight.csv'
 
 def get_num_gen(gen):
     return sum(1 for x in gen)

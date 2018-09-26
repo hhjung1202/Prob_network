@@ -180,16 +180,18 @@ def test(model, criterion, test_loader, epoch, is_main):
 
 layer_set = [14, 20, 32, 44, 56, 110]
 
-if __name__=='__main__':
-    
+
+def do_learning(model_dir, db, layer, num_gate=7):
     max_result = []
-    model_dir = '../hhjung/Proposed/cifar10/Resnet110x_'
-    model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[5])
-    dataset = 'cifar10'
+    model_selection = ResNet(num_gate=num_gate,num_classes=db,resnet_layer=layer)
+    dataset = 'cifar' + str(db)
     main(model_dir, model_selection, dataset)
 
-    max_result = []
-    model_dir = '../hhjung/Proposed/cifar10/Resnet110y_'
-    model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[5])
-    dataset = 'cifar10'
-    main(model_dir, model_selection, dataset)
+if __name__=='__main__':
+    
+    for i in range(10):
+        model_dir = '../hhjung/Proposed/cifar10/Resnet110_' + str(i)
+        do_learning(model_dir, 10, layer_set[5], num_gate=7)
+
+        # model_dir = '../hhjung/Proposed/cifar100/Resnet110_' + str(i)
+        # do_learning(model_dir, 100, layer_set[5], num_gate=7)

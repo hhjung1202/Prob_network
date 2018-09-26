@@ -8,7 +8,7 @@ import torch.backends.cudnn as cudnn
 import time
 import utils
 
-os.environ["CUDA_VISIBLE_DEVICES"] = '4'
+os.environ["CUDA_VISIBLE_DEVICES"] = '5'
 
 def main(model_dir, model, dataset):
     utils.default_model_dir = model_dir
@@ -44,10 +44,10 @@ def main(model_dir, model, dataset):
         model.load_state_dict(checkpoint['state_dict'])
         optimizer.load_state_dict(checkpoint['optimizer'])
 
-    for epoch in range(start_epoch, 165):
-        if epoch < 80:
+    for epoch in range(start_epoch, 350):
+        if epoch < 150:
             learning_rate = lr
-        elif epoch < 120:
+        elif epoch < 250:
             learning_rate = lr * 0.1
         else:
             learning_rate = lr * 0.01
@@ -134,9 +134,9 @@ def do_learning(model_dir, db, layer):
 if __name__=='__main__':
     
     for i in range(10):
-        model_dir = '../hhjung/Basemodel/cifar10_2/Resnet110_' + str(i)
+        model_dir = '../hhjung/Basemodel/cifar10/Resnet110_' + str(i)
         do_learning(model_dir, 10, layer_set[5])
 
-        model_dir = '../hhjung/Basemodel/cifar100_2/Resnet110_' + str(i)
+        model_dir = '../hhjung/Basemodel/cifar100/Resnet110_' + str(i)
         do_learning(model_dir, 100, layer_set[5])
     
