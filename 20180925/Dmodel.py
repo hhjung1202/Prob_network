@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from collections import OrderedDict
 
 
 class _DenseLayer(nn.Sequential):
@@ -59,7 +60,7 @@ class DenseNet(nn.Module):
                 self.features.add_module('transition%d' % (i + 1), trans)
 
         # Final batch norm
-        self.avgpool = nn.AvgPool2d(kernel_size=8, stride=1)
+        self.avgpool = nn.AvgPool2d(kernel_size=4, stride=1)
         self.fc = nn.Linear(num_features, num_classes)
 
         # Linear layer
