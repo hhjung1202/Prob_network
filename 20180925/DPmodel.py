@@ -8,9 +8,9 @@ class _Gate(nn.Sequential):
     def __init__(self, channels, reduction, num_init_features, growth_rate):
         super(_Gate, self).__init__()
         self.growth_rate = growth_rate
-        self.num_init_features = num_init_features
+        self.init = num_init_features
 
-        self.num_route = ((channels - num_init_features) // growth_rate) + 1
+        self.cnt = ((channels - num_init_features) // growth_rate) + 1
         self.avg_pool = nn.AdaptiveAvgPool2d(1)
         self.fc1 = nn.Linear(channels, channels//reduction, bias=False)
         self.relu = nn.ReLU(inplace=True)    
@@ -27,36 +27,17 @@ class _Gate(nn.Sequential):
         out = out.permute(0, 3, 1, 2) # batch, n+1(=num_route), 1, 1
 
         arr = []
-        arr.append(x[:,:self.num_init_features,:,:]) # 0 ~ 15
-        start = self.num_init_features
-        for i in range(self.num_route - 1):
-            arr.append(x[:,start:start+self.growth_rate,:,:]) # 16:28
-            start += self.growth_rate
+        arr.append(x[:,:self.init,:,:]) # 0 ~ 15
+        arr = arr + list(x[:,self.init:,:,:].split(self.growth_rate, dim=1))
+        
+        self.p_set = list(torch.split(out, 1, dim=1))
+        p_sum = sum(self.p_set)
 
-        self.p_set = []
-        p_sum = None
-        # multiply p's
-        for i in range(self.num_route):
-            self.p_set.append(out[:,i:i+1,:,:])
-            if p_sum is None:
-                p_sum = out[:,i:i+1,:,:]
-            else:
-                p_sum = p_sum + out[:,i:i+1,:,:]
-
-        for i in range(self.num_route):
-            self.p_set[i] = self.p_set[i] / p_sum * self.num_route
+        for i in range(self.cnt):
+            self.p_set[i] = self.p_set[i] / p_sum * self.cnt
             arr[i] = arr[i] * self.p_set[i]
 
         return torch.cat(*arr, 1)
-
-        # split x into 16, 12, 12, ... , 12
-        # multiply p's
-        p = out[:,:1,:,:] # batch, 1, 1, 1
-        q = out[:,1:,:,:] # batch, 1, 1, 1
-
-        self.p = p.view(-1) / (p.view(-1) + q.view(-1))
-        self.z = p / (p + q)
-        return x * self.z + res * (1 - self.z)
 
 
 class _DenseLayer(nn.Sequential):
