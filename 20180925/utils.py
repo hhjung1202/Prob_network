@@ -192,6 +192,19 @@ def weight_extract(model):
             else:
                 weight_extract(child)
 
+def weight_extract_densenet(model):
+    global c
+    if c is not None:
+        for child in model.children():
+            if hasattr(child, 'phase'):
+                if child.p is not None:
+                    for data in child.p:
+                        c = torch.cat([c, data.view(-1,1)], 1)
+            elif is_leaf(child):
+                continue
+            else:
+                weight_extract_densenet(child)
+
 
 def save_to_csv():
     global str_w

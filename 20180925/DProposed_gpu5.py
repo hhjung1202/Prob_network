@@ -132,7 +132,7 @@ def weight_extract(model, optimizer, criterion, train_loader, epoch):
 
         utils.c = target.view(-1,1) # batch array torch.tensor[128]
         utils.c = utils.c.type(torch.cuda.FloatTensor)
-        utils.weight_extract(model.module)
+        utils.weight_extract_densenet(model.module)
 
         for i in utils.c:
             for j in i:
@@ -182,9 +182,9 @@ layer_set = [14, 20, 32, 44, 56, 110]
 
 if __name__=='__main__':
     
-    for i in range(5):
+    for i in range(1,7):
         max_result = []
         model_dir = '../hhjung/Dense_Prop/cifar10/DenseNet20_' + str(i)
-        model_selection = DenseNet(num_classes=10, num_gate=2)
+        model_selection = DenseNet(num_classes=10, num_gate=i)
         dataset = 'cifar10'
         main(model_dir, model_selection, dataset)
