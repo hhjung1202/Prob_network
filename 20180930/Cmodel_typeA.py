@@ -4,7 +4,7 @@ import torch.nn.functional as F
 
 class BasicBlock(nn.Module):
 
-    def __init__(self, in_channels, out_channels, stride, downsample=None):
+    def __init__(self, in_channels, out_channels, stride, downsample=None, init_block=False):
         super(BasicBlock, self).__init__()
         self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=3, stride=stride, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(out_channels) #
@@ -20,8 +20,16 @@ class BasicBlock(nn.Module):
             )
 
     def forward(self, x):
-        residual = x
-        out = self.conv1(x)
+        if init_block is True:
+            out = x
+        else:
+            out = sum(x) # change to weighted sum
+            out = self.relu(out)
+
+        out = sum(x) # change to weighted sum
+        out = self.relu(out)
+
+        out = self.conv1(out)
         out = self.bn1(out)
         out = self.relu(out)
 
@@ -29,12 +37,12 @@ class BasicBlock(nn.Module):
         out = self.bn2(out)
 
         if self.downsample is not None:
-            residual = self.downsample(x)
+            x_ = []
+            for item in x:
+                x_.append(self.downsample(item))
+            x = x_            
 
-        out += residual
-        out = self.relu(out)
-        return out
-
+        return x + [out]
 
 class ResNet(nn.Module):
     def __init__(self, num_classes=10, resnet_layer=56):

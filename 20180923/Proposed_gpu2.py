@@ -182,6 +182,7 @@ layer_set = [14, 20, 32, 44, 56, 110]
 
 
 def do_learning(model_dir, db, layer, num_gate=7):
+    global max_result
     max_result = []
     model_selection = ResNet(num_gate=num_gate,num_classes=db,resnet_layer=layer)
     dataset = 'cifar' + str(db)
@@ -189,9 +190,38 @@ def do_learning(model_dir, db, layer, num_gate=7):
 
 if __name__=='__main__':
     
-    for i in range(10):
+    for i in range(3):
         # model_dir = '../hhjung/Proposed/cifar10/Resnet110_' + str(i)
         # do_learning(model_dir, 10, layer_set[5], num_gate=7)
 
-        model_dir = '../hhjung/Proposed/cifar100/Resnet110_' + str(i)
-        do_learning(model_dir, 100, layer_set[5], num_gate=7)
+        model_dir = '../hhjung/Proposed/cifar10/Resnet14_' + str(i)
+        do_learning(model_dir, 10, layer_set[0], num_gate=7)
+
+        model_dir = '../hhjung/Proposed/cifar10/Resnet20_' + str(i)
+        do_learning(model_dir, 10, layer_set[1], num_gate=7)
+
+        model_dir = '../hhjung/Proposed/cifar10/Resnet32_' + str(i)
+        do_learning(model_dir, 10, layer_set[2], num_gate=7)
+
+        model_dir = '../hhjung/Proposed/cifar10/Resnet44_' + str(i)
+        do_learning(model_dir, 10, layer_set[3], num_gate=7)
+
+        model_dir = '../hhjung/Proposed/cifar10/Resnet56_' + str(i)
+        do_learning(model_dir, 10, layer_set[4], num_gate=7)
+
+
+
+        model_dir = '../hhjung/Proposed/cifar100/Resnet14_' + str(i)
+        do_learning(model_dir, 100, layer_set[0], num_gate=7)
+
+        model_dir = '../hhjung/Proposed/cifar100/Resnet20_' + str(i)
+        do_learning(model_dir, 100, layer_set[1], num_gate=7)
+
+        model_dir = '../hhjung/Proposed/cifar100/Resnet32_' + str(i)
+        do_learning(model_dir, 100, layer_set[2], num_gate=7)
+
+        model_dir = '../hhjung/Proposed/cifar100/Resnet44_' + str(i)
+        do_learning(model_dir, 100, layer_set[3], num_gate=7)
+
+        model_dir = '../hhjung/Proposed/cifar100/Resnet56_' + str(i)
+        do_learning(model_dir, 100, layer_set[4], num_gate=7)

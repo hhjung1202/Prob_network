@@ -126,17 +126,47 @@ def test(model, criterion, test_loader, epoch):
 layer_set = [14, 20, 32, 44, 56, 110]
 
 def do_learning(model_dir, db, layer):
+    global max_result
     max_result = []
     model_selection = ResNet(num_classes=db, resnet_layer=layer)
     dataset = 'cifar' + str(db)
     main(model_dir, model_selection, dataset)
 
+
 if __name__=='__main__':
     
-    for i in range(10):
-        model_dir = '../hhjung/Basemodel/cifar10_2/Resnet110_' + str(i)
-        do_learning(model_dir, 10, layer_set[5])
+    for i in range(3):
+        # model_dir = '../hhjung/Proposed/cifar10/Resnet110_' + str(i)
+        # do_learning(model_dir, 10, layer_set[5], num_gate=7)
 
-        model_dir = '../hhjung/Basemodel/cifar100_2/Resnet110_' + str(i)
-        do_learning(model_dir, 100, layer_set[5])
-    
+        model_dir = '../hhjung/Basemodel/cifar10/Resnet14_' + str(i)
+        do_learning(model_dir, 10, layer_set[0])
+
+        model_dir = '../hhjung/Basemodel/cifar10/Resnet20_' + str(i)
+        do_learning(model_dir, 10, layer_set[1])
+
+        model_dir = '../hhjung/Basemodel/cifar10/Resnet32_' + str(i)
+        do_learning(model_dir, 10, layer_set[2])
+
+        model_dir = '../hhjung/Basemodel/cifar10/Resnet44_' + str(i)
+        do_learning(model_dir, 10, layer_set[3])
+
+        model_dir = '../hhjung/Basemodel/cifar10/Resnet56_' + str(i)
+        do_learning(model_dir, 10, layer_set[4])
+
+
+
+        model_dir = '../hhjung/Basemodel/cifar100/Resnet14_' + str(i)
+        do_learning(model_dir, 100, layer_set[0])
+
+        model_dir = '../hhjung/Basemodel/cifar100/Resnet20_' + str(i)
+        do_learning(model_dir, 100, layer_set[1])
+
+        model_dir = '../hhjung/Basemodel/cifar100/Resnet32_' + str(i)
+        do_learning(model_dir, 100, layer_set[2])
+
+        model_dir = '../hhjung/Basemodel/cifar100/Resnet44_' + str(i)
+        do_learning(model_dir, 100, layer_set[3])
+
+        model_dir = '../hhjung/Basemodel/cifar100/Resnet56_' + str(i)
+        do_learning(model_dir, 100, layer_set[4])

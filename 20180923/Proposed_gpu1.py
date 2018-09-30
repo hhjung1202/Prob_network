@@ -182,6 +182,7 @@ layer_set = [14, 20, 32, 44, 56, 110]
 
 
 def do_learning(model_dir, db, layer, num_gate=7):
+    global max_result
     max_result = []
     model_selection = ResNet(num_gate=num_gate,num_classes=db,resnet_layer=layer)
     dataset = 'cifar' + str(db)
