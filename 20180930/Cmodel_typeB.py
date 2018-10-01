@@ -14,7 +14,7 @@ class BasicBlock(nn.Module):
         self.init_block = init_block
 
     def forward(self, x):
-        if init_block is True:
+        if self.init_block is True:
             out = x
             x = [x]
         else:
@@ -41,6 +41,7 @@ class _Transition(nn.Sequential):
         self.bn2 = nn.BatchNorm2d(out_channels)
         
     def forward(self, x):
+
         out = sum(x)
         out = self.relu(out)
 
@@ -51,16 +52,17 @@ class _Transition(nn.Sequential):
         out = self.bn2(out)
         out = self.relu(out)
 
-        return out
+        return [out]
 
 class ResNet(nn.Module):
     def __init__(self, num_classes=10, resnet_layer=56):
         super(ResNet, self).__init__()
 
         self.features = nn.Sequential()
+        num_features = 16
 
-        self.features.add_module('conv1', nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1, bias=False))
-        self.features.add_module('bn1', nn.BatchNorm2d(16))
+        self.features.add_module('conv1', nn.Conv2d(3, num_features, kernel_size=3, stride=1, padding=1, bias=False))
+        self.features.add_module('bn1', nn.BatchNorm2d(num_features))
         self.features.add_module('relu', nn.ReLU(inplace=True))
 
         if resnet_layer is 14:
@@ -77,12 +79,12 @@ class ResNet(nn.Module):
             block_config = (6,6,6)
             
 
-        num_features = 16
         for i, num_layers in enumerate(block_config):
             
-            layer = nn.Sequential()
-            layer.add_module('layer%d_0' % (i+1), BasicBlock(channels=num_features, init_block=True))
+            if i is 0:
+                self.features.add_module('first_layer', BasicBlock(channels=num_features, init_block=True))
             
+            layer = nn.Sequential()
             for j in range(1, num_layers):
                 layer.add_module('layer%d_%d' % (i+1, j), BasicBlock(channels=num_features, init_block=False))
 

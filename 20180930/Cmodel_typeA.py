@@ -12,6 +12,7 @@ class BasicBlock(nn.Module):
         self.conv2 = nn.Conv2d(out_channels, out_channels, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn2 = nn.BatchNorm2d(out_channels)
         self.downsample = downsample
+        self.init_block = init_block
         
         if downsample is not None:
             self.downsample = nn.Sequential(
@@ -20,14 +21,12 @@ class BasicBlock(nn.Module):
             )
 
     def forward(self, x):
-        if init_block is True:
+        if self.init_block is True:
             out = x
+            x = [x]
         else:
             out = sum(x) # change to weighted sum
             out = self.relu(out)
-
-        out = sum(x) # change to weighted sum
-        out = self.relu(out)
 
         out = self.conv1(out)
         out = self.bn1(out)
@@ -47,52 +46,61 @@ class BasicBlock(nn.Module):
 class ResNet(nn.Module):
     def __init__(self, num_classes=10, resnet_layer=56):
         super(ResNet, self).__init__()
-        self.conv1 = nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1, bias=False)
-        self.bn1 = nn.BatchNorm2d(16)
-        self.relu = nn.ReLU(inplace=True)
+
+        self.features = nn.Sequential()
+        num_features = 16
+
+        self.features.add_module('conv1', nn.Conv2d(3, num_features, kernel_size=3, stride=1, padding=1, bias=False))
+        self.features.add_module('bn1', nn.BatchNorm2d(num_features))
+        self.features.add_module('relu', nn.ReLU(inplace=True))
 
         if resnet_layer is 14:
-            self.n = 2
+            block_config = (6,6,6)
         elif resnet_layer is 20:
-            self.n = 3
+            block_config = (6,6,6)
         elif resnet_layer is 32:
-            self.n = 5
+            block_config = (6,6,6)
         elif resnet_layer is 44:
-            self.n = 7
+            block_config = (6,6,6)
         elif resnet_layer is 56:
-            self.n = 9
+            block_config = (6,6,6)
         elif resnet_layer is 110:
-            self.n = 18
+            block_config = (6,6,6)
             
 
-        self.layer1 = nn.Sequential()
-        self.layer1.add_module('layer1_0', BasicBlock(in_channels=16, out_channels=16, stride=1, downsample=None))
-        for i in range(1,self.n):
-            self.layer1.add_module('layer1_%d' % (i), BasicBlock(in_channels=16, out_channels=16, stride=1, downsample=None))
+        
+        for i, num_layers in enumerate(block_config):
+            if i is 0:
+                layer = nn.Sequential()
+                layer.add_module('layer%d_0' % (i+1), BasicBlock(in_channels=num_features
+                        , out_channels=num_features, stride=1, downsample=None, init_block=True))
+            else:
+                layer = nn.Sequential()
+                layer.add_module('layer%d_0' % (i+1), BasicBlock(in_channels=num_features
+                        , out_channels=num_features*2, stride=2, downsample=True, init_block=False))
+                num_features = num_features * 2
 
-        self.layer2 = nn.Sequential()
-        self.layer2.add_module('layer2_0', BasicBlock(in_channels=16, out_channels=32, stride=2, downsample=True))
-        for i in range(1,self.n):
-            self.layer2.add_module('layer2_%d' % (i), BasicBlock(in_channels=32, out_channels=32, stride=1, downsample=None))
+            for j in range(1, num_layers):
+                layer.add_module('layer%d_%d' % (i+1, j), BasicBlock(in_channels=num_features
+                        , out_channels=num_features, stride=1, downsample=None, init_block=False))
 
-        self.layer3 = nn.Sequential()
-        self.layer3.add_module('layer3_0', BasicBlock(in_channels=32, out_channels=64, stride=2, downsample=True))
-        for i in range(1,self.n):
-            self.layer3.add_module('layer3_%d' % (i), BasicBlock(in_channels=64, out_channels=64, stride=1, downsample=None))
+            self.features.add_module('layer%d' % (i + 1), layer)
+            # if i != len(block_config) - 1:
+            #     self.features.add_module('transition%d' % (i + 1), _Transition(in_channels=num_features, out_channels=num_features * 2))
+            #     num_features = num_features * 2
 
-        self.avgpool = nn.AvgPool2d(kernel_size=8, stride=1)
-        self.fc = nn.Linear(64, num_classes)
+        # Final batch norm
+
+        self.relu = nn.ReLU(inplace=True)
+        self.pool = nn.AvgPool2d(kernel_size=8, stride=1)
+        self.fc = nn.Linear(num_features, num_classes)
+        
 
     def forward(self, x):
-        x = self.conv1(x)
-        x = self.bn1(x)
-        x = self.relu(x)
-
-        x = self.layer1(x)
-        x = self.layer2(x)
-        x = self.layer3(x)
-
-        x = self.avgpool(x)
-        x = x.view(x.size(0), -1)
-        x = self.fc(x)
-        return x
+        out = self.features(x)
+        out = sum(out)
+        out = self.relu(out)
+        out = self.pool(out)
+        out = out.view(out.size(0), -1)
+        out = self.fc(out)
+        return out

@@ -2,25 +2,22 @@ import torch
 from torch.autograd import Variable
 import torch.optim as optim
 from torchvision import datasets, transforms
-from Dmodel import *
+from Cmodel_typeA import *
 import os
 import torch.backends.cudnn as cudnn
 import time
 import utils
 
-os.environ["CUDA_VISIBLE_DEVICES"] = '4'
+os.environ["CUDA_VISIBLE_DEVICES"] = '1'
 
-def main(model_dir, model, dataset, batch_size=128):
+def main(model_dir, model, dataset):
     utils.default_model_dir = model_dir
     # model = model
     lr = 0.1
     start_time = time.time()
 
     if dataset == 'cifar10':
-        if batch_size is 128:
-            train_loader, test_loader = utils.cifar10_loader()
-        elif batch_size is 64:
-            train_loader, test_loader = utils.cifar10_loader_64()
+        train_loader, test_loader = utils.cifar10_loader()
     elif dataset == 'cifar100':
         train_loader, test_loader = utils.cifar100_loader()
     
@@ -73,7 +70,6 @@ def main(model_dir, model, dataset, batch_size=128):
     now = time.gmtime(time.time() - start_time)
     print('{} hours {} mins {} secs for training'.format(now.tm_hour, now.tm_min, now.tm_sec))
 
-
 def train(model, optimizer, criterion, train_loader, epoch):
     model.train()
     train_loss = 0
@@ -100,7 +96,6 @@ def train(model, optimizer, criterion, train_loader, epoch):
             print('Epoch: {} | Batch: {} |  Loss: ({:.4f}) | Acc: ({:.2f}%) ({}/{})'
                   .format(epoch, batch_idx, train_loss / (batch_idx + 1), 100. * correct / total, correct, total))
 
-
 def test(model, criterion, test_loader, epoch):
     model.eval()
     test_loss = 0
@@ -121,22 +116,24 @@ def test(model, criterion, test_loader, epoch):
         correct += predicted.eq(target.data).cpu().sum()
 
     max_result.append(correct)
+
     utils.print_log('# TEST : Epoch : {} | Loss: ({:.4f}) | Acc: ({:.2f}%) ({}/{}) | Err: ({:.2f}%) | Max: ({})'
-          .format(epoch, test_loss/(batch_idx+1), 100.*correct/total, correct, total, 100-100.*correct/total, max(max_result)))
+      .format(epoch, test_loss/(batch_idx+1), 100.*correct/total, correct, total, 100-100.*correct/total, max(max_result)))
     print('# TEST : Epoch : {} | Loss: ({:.4f}) | Acc: ({:.2f}%) ({}/{}) | Err: ({:.2f}% | Max: ({}))'
-          .format(epoch, test_loss/(batch_idx+1), 100.*correct/total, correct, total, 100-100.*correct/total, max(max_result)))
+      .format(epoch, test_loss/(batch_idx+1), 100.*correct/total, correct, total, 100-100.*correct/total, max(max_result)))
 
 
 layer_set = [14, 20, 32, 44, 56, 110]
-def do_learning(model_dir, db, layer, batch_s=128):
+
+def do_learning(model_dir, db, layer):
     global max_result
     max_result = []
-    model_selection = DenseNet(num_classes=10)
+    model_selection = ResNet(num_classes=db, resnet_layer=layer)
     dataset = 'cifar' + str(db)
-    main(model_dir, model_selection, dataset, batch_s)
+    main(model_dir, model_selection, dataset)
 
 if __name__=='__main__':
-
-    for i in range(5):
-        model_dir = '../hhjung/Dense_Base/cifar10/DenseNet40/' + str(i)
-        do_learning(model_dir, 10, layer_set[4], 64)
+    
+    for i in range(3):
+        model_dir = '../hhjung/RtypeA/cifar10/Resnet38/' + str(i)
+        do_learning(model_dir, 10, layer_set[5])

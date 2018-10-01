@@ -11,7 +11,7 @@ class _Bottleneck(nn.Sequential):
         self.relu = nn.ReLU(inplace=True)
         self.conv1 = nn.Conv2d(num_input_features, 4 * growth_rate,
                         kernel_size=1, stride=1, bias=False)
-        self.norm2 = nn.BatchNorm2d(4 * num_input_features)
+        self.norm2 = nn.BatchNorm2d(4 * growth_rate)
         self.conv2 = nn.Conv2d(4 * growth_rate, growth_rate,
                         kernel_size=3, stride=1, padding=1, bias=False)
 
@@ -107,7 +107,7 @@ class DenseNet(nn.Module):
         #         nn.init.constant_(m.bias, 0)
 
     def forward(self, x):
-        features = self.features(x)
+        out = self.features(x)
         out = out.view(out.size(0), -1)
         out = self.fc(out)
         return out
