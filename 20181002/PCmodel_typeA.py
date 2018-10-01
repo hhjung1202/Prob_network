@@ -2,9 +2,89 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+class _Gate(nn.Sequential):
+    phase = 2
+    def __init__(self, channels, reduction, num_init_features, growth_rate, count):
+        super(_Gate, self).__init__()
+        self.growth_rate = growth_rate
+        self.init = num_init_features
+
+        self.cnt = ((channels - num_init_features) // growth_rate) + 1
+        self.avg_pool = nn.AdaptiveAvgPool2d(1)
+        self.fc1 = nn.Linear(channels, channels//reduction, bias=False)
+        self.relu = nn.ReLU(inplace=True)    
+        self.fc2 = nn.Linear(channels//reduction, self.cnt, bias=False)
+        self.fc2.weight.data.fill_(0.)
+        self.sigmoid = nn.Sigmoid()
+        self.p = None
+
+    def forward(self, x):
+
+        if self.cnt is not 1:
+            arr = []
+            arr.append(x[:,:self.init,:,:]) # 0 ~ 15
+            
+            out = self.avg_pool(x)
+            out = out.permute(0, 2, 3, 1)
+            out = self.relu(self.fc1(out))
+            out = self.sigmoid(self.fc2(out))
+            out = out.permute(0, 3, 1, 2) # batch, n+1(=num_route), 1, 1
+
+            arr = arr + list(x[:,self.init:,:,:].split(self.growth_rate, dim=1))
+            self.p = list(torch.split(out, 1, dim=1))
+            p_sum = sum(self.p)
+
+            for i in range(self.cnt):
+                self.p[i] = self.p[i] / p_sum * self.cnt
+                arr[i] = arr[i] * self.p[i]
+
+            return torch.cat(arr, 1)
+        else:
+            return x
+
+# class _Gate2(nn.Sequential):
+#     phase = 2
+#     def __init__(self, channels, reduction, num_init_features, growth_rate):
+#         super(_Gate2, self).__init__()
+#         self.growth_rate = growth_rate
+#         self.init = num_init_features
+
+#         self.cnt = ((channels - num_init_features) // growth_rate) + 1
+#         self.avg_pool = nn.AdaptiveAvgPool2d(1)
+#         self.fc1 = nn.Linear(channels, reduction, bias=False)
+#         self.relu = nn.ReLU(inplace=True)    
+#         self.fc2 = nn.Linear(reduction, self.cnt, bias=False)
+#         self.fc2.weight.data.fill_(0.)
+#         self.sigmoid = nn.Sigmoid()
+#         self.p = None
+
+#     def forward(self, x):
+
+#         if self.cnt is not 1:
+#             arr = []
+#             arr.append(x[:,:self.init,:,:]) # 0 ~ 15
+            
+#             out = self.avg_pool(x)
+#             out = out.permute(0, 2, 3, 1)
+#             out = self.relu(self.fc1(out))
+#             out = self.sigmoid(self.fc2(out))
+#             out = out.permute(0, 3, 1, 2) # batch, n+1(=num_route), 1, 1
+
+#             arr = arr + list(x[:,self.init:,:,:].split(self.growth_rate, dim=1))
+#             self.p = list(torch.split(out, 1, dim=1))
+#             p_sum = sum(self.p)
+
+#             for i in range(self.cnt):
+#                 self.p[i] = self.p[i] / p_sum * self.cnt
+#                 arr[i] = arr[i] * self.p[i]
+
+#             return torch.cat(arr, 1)
+#         else:
+#             return x
+
 class BasicBlock(nn.Module):
 
-    def __init__(self, in_channels, out_channels, stride, downsample=None, init_block=False):
+    def __init__(self, in_channels, out_channels, stride, downsample=None, init_block=False, count=1):
         super(BasicBlock, self).__init__()
         self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=3, stride=stride, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(out_channels) #
@@ -13,6 +93,8 @@ class BasicBlock(nn.Module):
         self.bn2 = nn.BatchNorm2d(out_channels)
         self.downsample = downsample
         self.init_block = init_block
+
+        self.gate = _Gate(count=count)
         
         if downsample is not None:
             self.downsample = nn.Sequential(
@@ -68,21 +150,25 @@ class ResNet(nn.Module):
             block_config = (6,6,6)
             
 
-        
+        count = 1
         for i, num_layers in enumerate(block_config):
             if i is 0:
                 layer = nn.Sequential()
                 layer.add_module('layer%d_0' % (i+1), BasicBlock(in_channels=num_features
                         , out_channels=num_features, stride=1, downsample=None, init_block=True))
+                count += 1
             else:
                 layer = nn.Sequential()
                 layer.add_module('layer%d_0' % (i+1), BasicBlock(in_channels=num_features
-                        , out_channels=num_features*2, stride=2, downsample=True, init_block=False))
+                        , out_channels=num_features*2, stride=2, downsample=True, init_block=False, count=count))
                 num_features = num_features * 2
+                count += 1
 
             for j in range(1, num_layers):
                 layer.add_module('layer%d_%d' % (i+1, j), BasicBlock(in_channels=num_features
-                        , out_channels=num_features, stride=1, downsample=None, init_block=False))
+                        , out_channels=num_features, stride=1, downsample=None, init_block=False, count=count))
+                count += 1
+
 
             self.features.add_module('layer%d' % (i + 1), layer)
             # if i != len(block_config) - 1:
@@ -90,6 +176,7 @@ class ResNet(nn.Module):
             #     num_features = num_features * 2
 
         # Final batch norm
+        self.gate = _Gate(count=count)
 
         self.relu = nn.ReLU(inplace=True)
         self.pool = nn.AvgPool2d(kernel_size=8, stride=1)
@@ -106,7 +193,8 @@ class ResNet(nn.Module):
 
     def forward(self, x):
         out = self.features(x)
-        out = sum(out)
+        out = sum(out) 
+        # out = gate(out)
         out = self.relu(out)
         out = self.pool(out)
         out = out.view(out.size(0), -1)
