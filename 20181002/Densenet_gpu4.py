@@ -34,7 +34,7 @@ def main(model_dir, model, dataset, batch_size=128):
     else:
         print("NO GPU -_-;")
 
-    optimizer = optim.SGD(model.parameters(), lr=lr, momentum=0.9, weight_decay=1e-4)
+    optimizer = optim.SGD(model.parameters(), lr=lr, momentum=0.9, weight_decay=1e-4, nesterov=True)
     criterion = nn.CrossEntropyLoss().cuda()
 
     start_epoch = 0
