@@ -2,13 +2,13 @@ import torch
 from torch.autograd import Variable
 import torch.optim as optim
 from torchvision import datasets, transforms
-from Cmodel_typeB import *
+from Cmodel import *
 import os
 import torch.backends.cudnn as cudnn
 import time
 import utils
 
-os.environ["CUDA_VISIBLE_DEVICES"] = '2'
+os.environ["CUDA_VISIBLE_DEVICES"] = '5'
 
 def main(model_dir, model, dataset):
     utils.default_model_dir = model_dir
@@ -44,10 +44,10 @@ def main(model_dir, model, dataset):
         model.load_state_dict(checkpoint['state_dict'])
         optimizer.load_state_dict(checkpoint['optimizer'])
     
-    for epoch in range(start_epoch, 300):
-        if epoch < 150:
+    for epoch in range(start_epoch, 165):
+        if epoch < 80:
             learning_rate = lr
-        elif epoch < 225:
+        elif epoch < 120:
             learning_rate = lr * 0.1
         else:
             learning_rate = lr * 0.01
@@ -135,5 +135,26 @@ def do_learning(model_dir, db, layer):
 if __name__=='__main__':
     
     for i in range(3):
-        model_dir = '../hhjung/C_Base/cifar10/change_init/' + str(i)
-        do_learning(model_dir, 10, layer_set[5])
+        layer_num = layer_set[0]
+        model_dir = '../hhjung/C_Base/cifar10/Resnet{}/{}'.format(layer_num, str(i))
+        do_learning(model_dir, 10, layer_num)
+
+        layer_num = layer_set[1]
+        model_dir = '../hhjung/C_Base/cifar10/Resnet{}/{}'.format(layer_num, str(i))
+        do_learning(model_dir, 10, layer_num)
+
+        layer_num = layer_set[2]
+        model_dir = '../hhjung/C_Base/cifar10/Resnet{}/{}'.format(layer_num, str(i))
+        do_learning(model_dir, 10, layer_num)
+
+        layer_num = layer_set[3]
+        model_dir = '../hhjung/C_Base/cifar10/Resnet{}/{}'.format(layer_num, str(i))
+        do_learning(model_dir, 10, layer_num)
+
+        layer_num = layer_set[4]
+        model_dir = '../hhjung/C_Base/cifar10/Resnet{}/{}'.format(layer_num, str(i))
+        do_learning(model_dir, 10, layer_num)
+
+        layer_num = layer_set[5]
+        model_dir = '../hhjung/C_Base/cifar10/Resnet{}/{}'.format(layer_num, str(i))
+        do_learning(model_dir, 10, layer_num)

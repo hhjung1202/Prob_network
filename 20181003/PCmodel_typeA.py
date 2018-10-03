@@ -81,7 +81,7 @@ class _Gate2(nn.Sequential):
 
 class BasicBlock(nn.Module):
 
-    def __init__(self, in_channels, out_channels, stride, gate, downsample=None, init_block=False, count=1, num_gate=0):
+    def __init__(self, in_channels, out_channels, stride, downsample=None, init_block=False, count=1, num_gate=0):
         super(BasicBlock, self).__init__()
         self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=3, stride=stride, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(out_channels) #
@@ -208,7 +208,7 @@ class ResNet(nn.Module):
     def forward(self, x):
         out = self.features(x)
         # out = sum(out) 
-        out = gate(out)
+        out = self.gate(out)
         out = self.relu(out)
         out = self.pool(out)
         out = out.view(out.size(0), -1)
