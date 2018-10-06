@@ -83,45 +83,6 @@ class _Gate2(nn.Sequential):
         else:
             return x
 
- # class _Gate3(nn.Sequential):
- #    phase = 2
- #    def __init__(self, channels, reduction, num_init_features, growth_rate):
- #        super(_Gate3, self).__init__()
- #        self.growth_rate = growth_rate
- #        self.init = num_init_features
-
- #        self.cnt = ((channels - num_init_features) // growth_rate) + 1
- #        self.avg_pool = nn.AdaptiveAvgPool2d(1)
- #        self.fc1 = nn.Linear(channels, reduction, bias=False)
- #        self.relu = nn.ReLU(inplace=True)    
- #        self.fc2 = nn.Linear(reduction, self.cnt, bias=False)
- #        self.fc2.weight.data.fill_(0.)
- #        self.sigmoid = nn.Sigmoid()
- #        self.p = None
-
- #    def forward(self, x):
-
- #        if self.cnt is not 1:
- #            arr = []
- #            arr.append(x[:,:self.init,:,:]) # 0 ~ 15
-            
- #            out = self.avg_pool(x)
- #            out = out.permute(0, 2, 3, 1)
- #            out = self.relu(self.fc1(out))
- #            out = self.sigmoid(self.fc2(out))
- #            out = out.permute(0, 3, 1, 2) # batch, n+1(=num_route), 1, 1
-
- #            arr = arr + list(x[:,self.init:,:,:].split(self.growth_rate, dim=1))
- #            self.p = list(torch.split(out, 1, dim=1))
- #            p_sum = sum(self.p)
-
- #            for i in range(self.cnt):
- #                self.p[i] = self.p[i] / p_sum * self.cnt
- #                arr[i] = arr[i] * self.p[i]
-
- #            return torch.cat(arr, 1)
- #        else:
- #            return x
 
 
 
