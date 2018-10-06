@@ -10,7 +10,7 @@ import utils
 
 os.environ["CUDA_VISIBLE_DEVICES"] = '3'
 
-def main(model_dir, model, dataset, batch_size=128):
+def main(model_dir, model, dataset, batch_size=128, epochs=[225,337,450]):
     utils.default_model_dir = model_dir
     utils.c = None
     utils.str_w = ''
@@ -51,10 +51,10 @@ def main(model_dir, model, dataset, batch_size=128):
 
     utils.init_learning(model.module)
 
-    for epoch in range(start_epoch, 400):
-        if epoch < 200:
+    for epoch in range(start_epoch, epochs[2]):
+        if epoch < epochs[0]:
             learning_rate = lr
-        elif epoch < 300:
+        elif epoch < epochs[1]:
             learning_rate = lr * 0.1
         else:
             learning_rate = lr * 0.01
@@ -184,17 +184,16 @@ def test(model, criterion, test_loader, epoch, is_main):
 
 layer_set = [22, 28, 34, 40]
 
-def do_learning(model_dir, db, layer, num_gate=0, batch_s=128, is_bottleneck=True):
+def do_learning(model_dir, db, layer, num_gate=0, batch_s=128, is_bottleneck=True, epochs=[225,337,450]):
     global max_result
     max_result = []
     model_selection = DenseNet(num_classes=10, num_gate=num_gate, is_bottleneck=is_bottleneck, layer=layer)
     dataset = 'cifar' + str(db)
-    main(model_dir, model_selection, dataset, batch_s)
+    main(model_dir, model_selection, dataset, batch_s, epochs)
 
 if __name__=='__main__':
     
     for i in range(5):
-        for j in range(6):
-            model_dir = '../hhjung/Dense_Prop/cifar10/gpu3/gate{}/{}'.format(j, i)
-            do_learning(model_dir, 10, layer_set[0], num_gate=j
-                    , batch_s=64, is_bottleneck=False)
+        model_dir = '../hhjung/Dense_Prop/main_model/gpu3/layer{}/{}'.format(layer_set[2],i)
+        do_learning(model_dir, 10, layer_set[2], num_gate=4
+                , batch_s=64, is_bottleneck=True, epochs=[225,337,450])
