@@ -194,6 +194,6 @@ def do_learning(model_dir, db, layer, num_gate=0, batch_s=128, is_bottleneck=Tru
 if __name__=='__main__':
     
     for i in range(5):
-        model_dir = '../hhjung/Dense_Prop/main_model/gpu4/layer{}/{}'.format(layer_set[3],i)
+        model_dir = '../hhjung/Dense_Prop/main_model/gpu4/Alayer{}/{}'.format(layer_set[3],i)
         do_learning(model_dir, 10, layer_set[3], num_gate=3
                 , batch_s=64, is_bottleneck=True, epochs=[225,337,450])

@@ -193,8 +193,7 @@ def do_learning(model_dir, db, layer, num_gate=0, batch_s=128, is_bottleneck=Tru
 
 if __name__=='__main__':
     
-    for i in range(5):
-        for j in range(2):
-            model_dir = '../hhjung/Dense_Prop/main_model/gpu0/layer{}/{}'.format(layer_set[j],i)
-            do_learning(model_dir, 10, layer_set[j], num_gate=3
-                    , batch_s=64, is_bottleneck=True, epochs=[225,337,450])
+    for i in range(10):
+        model_dir = '../hhjung/Dense_Prop/main_model/gpu0/Alayer{}/{}'.format(layer_set[0],i)
+        do_learning(model_dir, 10, layer_set[0], num_gate=3
+                , batch_s=64, is_bottleneck=True, epochs=[225,337,450])
