@@ -140,5 +140,5 @@ if __name__=='__main__':
 
     for i in range(10):
         for j in range(1,4):
-            model_dir = '../hhjung/Dense_Base/cifar10/gpu4/layer{}/{}'.format(layer_set[j], i)
-            do_learning(model_dir, 10, layer_set[j], batch_s=64, is_bottleneck=True)
+            model_dir = '../hhjung/Dense_Base/cifar10/gpu4/layer{}b128/{}'.format(layer_set[j], i)
+            do_learning(model_dir, 10, layer_set[j], batch_s=128, is_bottleneck=True)
