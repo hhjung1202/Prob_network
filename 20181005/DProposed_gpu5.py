@@ -187,13 +187,13 @@ layer_set = [22, 28, 34, 40]
 def do_learning(model_dir, db, layer, num_gate=0, batch_s=128, is_bottleneck=True, epochs=[225,337,450]):
     global max_result
     max_result = []
-    model_selection = DenseNet(num_classes=10, num_gate=num_gate, is_bottleneck=is_bottleneck, layer=layer)
+    model_selection = DenseNet(num_classes=db, num_gate=num_gate, is_bottleneck=is_bottleneck, layer=layer)
     dataset = 'cifar' + str(db)
     main(model_dir, model_selection, dataset, batch_s, epochs)
 
 if __name__=='__main__':
     
     for i in range(5):
-        model_dir = '../hhjung/Dense_Prop/main_model/gpu5/Alayer{}/{}'.format(layer_set[3],i)
+        model_dir = '../hhjung/Dense_Prop/cifar10_non/gpu5/layer{}/{}'.format(layer_set[3],i)
         do_learning(model_dir, 10, layer_set[3], num_gate=3
-                , batch_s=64, is_bottleneck=True, epochs=[225,337,450])
+                , batch_s=64, is_bottleneck=False, epochs=[225,337,450])

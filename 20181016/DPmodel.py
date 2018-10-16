@@ -35,7 +35,7 @@ class _Gate(nn.Sequential):
         p_sum = sum(self.p) # [batch, 1, 1, 1]
 
         for i in range(self.count):
-            self.p[i] = self.p[i] / p_sum * self.count * 2 # normalize
+            self.p[i] = self.p[i] / p_sum * self.count / 2 # normalize
             x[i] = x[i] * self.p[i]
 
         return torch.cat(x,1)
@@ -73,7 +73,118 @@ class _Gate2(nn.Sequential):
         p_sum = sum(self.p) # [batch, 1, 1, 1]
 
         for i in range(self.count):
-            self.p[i] = self.p[i] / p_sum * self.count * 2
+            self.p[i] = self.p[i] / p_sum * self.count / 2
+            x[i] = x[i] * self.p[i]
+
+        return torch.cat(x,1)
+
+class _Gate3(nn.Sequential):
+    phase = 2
+    def __init__(self, channels, reduction, count):
+        super(_Gate3, self).__init__()
+
+        # self.growth_rate = growth_rate
+        # self.init = num_init_features
+        self.count = count
+        self.avg_pool = nn.AdaptiveAvgPool2d(1)
+        self.fc1 = nn.Linear(channels, channels//reduction, bias=False)
+        self.relu = nn.ReLU(inplace=True)
+        self.fc2 = nn.Linear(channels//reduction, self.count, bias=False)
+        self.fc2.weight.data.fill_(0.)
+        self.sigmoid = nn.Sigmoid()
+        self.p = None
+
+    def forward(self, x):
+
+        out = torch.cat(x,1)
+        out = self.avg_pool(out)
+        out = out.permute(0, 2, 3, 1)
+        out = self.relu(self.fc1(out))
+        out = self.sigmoid(self.fc2(out))
+        out = out.permute(0, 3, 1, 2) # batch, count, 1, 1
+
+        # out size is   # batch, count, 1, 1
+        # x size is     # count * [batch, 16, 32, 32]
+
+        self.p = list(torch.split(out, 1, dim=1)) # array of [batch, 1, 1, 1]
+        p_sum = sum(self.p) # [batch, 1, 1, 1]
+
+        for i in range(self.count):
+            self.p[i] = self.p[i] / p_sum * 3 # normalize
+            x[i] = x[i] * self.p[i]
+
+        return torch.cat(x,1)
+
+class _Gate4(nn.Sequential):
+    phase = 2
+    def __init__(self, channels, reduction, count):
+        super(_Gate4, self).__init__()
+
+        # self.growth_rate = growth_rate
+        # self.init = num_init_features
+        self.count = count
+        self.avg_pool = nn.AdaptiveAvgPool2d(1)
+        self.fc1 = nn.Linear(channels, channels//reduction, bias=False)
+        self.relu = nn.ReLU(inplace=True)
+        self.fc2 = nn.Linear(channels//reduction, self.count, bias=False)
+        self.fc2.weight.data.fill_(0.)
+        self.sigmoid = nn.Sigmoid()
+        self.p = None
+
+    def forward(self, x):
+
+        out = torch.cat(x,1)
+        out = self.avg_pool(out)
+        out = out.permute(0, 2, 3, 1)
+        out = self.relu(self.fc1(out))
+        out = self.sigmoid(self.fc2(out))
+        out = out.permute(0, 3, 1, 2) # batch, count, 1, 1
+
+        # out size is   # batch, count, 1, 1
+        # x size is     # count * [batch, 16, 32, 32]
+
+        self.p = list(torch.split(out, 1, dim=1)) # array of [batch, 1, 1, 1]
+        p_sum = sum(self.p) # [batch, 1, 1, 1]
+
+        for i in range(self.count):
+            self.p[i] = self.p[i] / p_sum * 4 # normalize
+            x[i] = x[i] * self.p[i]
+
+        return torch.cat(x,1)
+
+class _Gate5(nn.Sequential):
+    phase = 2
+    def __init__(self, channels, reduction, count):
+        super(_Gate5, self).__init__()
+
+        # self.growth_rate = growth_rate
+        # self.init = num_init_features
+        self.count = count
+        self.avg_pool = nn.AdaptiveAvgPool2d(1)
+        self.fc1 = nn.Linear(channels, channels//reduction, bias=False)
+        self.relu = nn.ReLU(inplace=True)
+        self.fc2 = nn.Linear(channels//reduction, self.count, bias=False)
+        self.fc2.weight.data.fill_(0.)
+        self.sigmoid = nn.Sigmoid()
+        self.p = None
+
+    def forward(self, x):
+
+        out = torch.cat(x,1)
+        out = self.avg_pool(out)
+        out = out.permute(0, 2, 3, 1)
+        out = self.relu(self.fc1(out))
+        out = self.sigmoid(self.fc2(out))
+        out = out.permute(0, 3, 1, 2) # batch, count, 1, 1
+
+        # out size is   # batch, count, 1, 1
+        # x size is     # count * [batch, 16, 32, 32]
+
+        self.p = list(torch.split(out, 1, dim=1)) # array of [batch, 1, 1, 1]
+        p_sum = sum(self.p) # [batch, 1, 1, 1]
+
+        for i in range(self.count):
+            self.p[i] = self.p[i] / p_sum * 8 # normalize
             x[i] = x[i] * self.p[i]
 
         return torch.cat(x,1)
@@ -170,23 +281,21 @@ class DenseNet(nn.Module):
             block_config = [2*x for x in block_config]
 
         if num_gate is 0:
-            gate_class = _Gate
-            gate_reduction = 4
-        elif num_gate is 1:
-            gate_class = _Gate
-            gate_reduction = 2
-        elif num_gate is 2:
-            gate_class = _Gate2
-            gate_reduction = 16
-        elif num_gate is 3:
             gate_class = _Gate2
             gate_reduction = 24
+        elif num_gate is 2:
+            gate_class = _Gate2
+            gate_reduction = 24
+        elif num_gate is 3:
+            gate_class = _Gate3
+            gate_reduction = 24
         elif num_gate is 4:
-            gate_class = _Gate2
-            gate_reduction = 32
+            gate_class = _Gate4
+            gate_reduction = 24
         elif num_gate is 5:
-            gate_class = _Gate2
-            gate_reduction = 48
+            gate_class = _Gate5
+            gate_reduction = 24
+        
 
         self.features = nn.Sequential()
         self.features.add_module('conv0', nn.Conv2d(3, num_init_features, kernel_size=3, stride=1, padding=1, bias=False))
@@ -220,6 +329,12 @@ class DenseNet(nn.Module):
 
         # Linear layer
         # Official init from torch repo.
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                nn.init.kaiming_normal_(m.weight)
+            elif isinstance(m, nn.BatchNorm2d):
+                nn.init.constant_(m.weight, 1)
+                nn.init.constant_(m.bias, 0)
 
     def forward(self, x):
         out = self.features(x)

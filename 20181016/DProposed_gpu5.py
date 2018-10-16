@@ -196,6 +196,6 @@ def do_learning(model_dir, db, layer, num_gate=0, batch_s=128, is_bottleneck=Tru
 if __name__=='__main__':
     
     for i in range(10):
-        model_dir = '../hhjung/Dense_Prop/only40/g5_layer{}_cifar100/{}'.format(layer_set[3],i)
-        do_learning(model_dir, 100, layer_set[3], num_gate=3
+        model_dir = '../hhjung/Dense_Prop/only40/g5_layer{}_cifar10/{}'.format(layer_set[3],i)
+        do_learning(model_dir, 10, layer_set[3], num_gate=5
                 , batch_s=64, is_bottleneck=False, epochs=[150,250,350])

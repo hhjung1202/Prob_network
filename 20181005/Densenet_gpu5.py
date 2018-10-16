@@ -132,7 +132,7 @@ layer_set = [22, 28, 34, 40]
 def do_learning(model_dir, db, layer, batch_s=128, is_bottleneck=True):
     global max_result
     max_result = []
-    model_selection = DenseNet(num_classes=10, is_bottleneck=is_bottleneck, layer=layer)
+    model_selection = DenseNet(num_classes=db, is_bottleneck=is_bottleneck, layer=layer)
     dataset = 'cifar' + str(db)
     main(model_dir, model_selection, dataset, batch_s)
 

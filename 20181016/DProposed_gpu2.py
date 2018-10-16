@@ -198,5 +198,5 @@ if __name__=='__main__':
     
     for i in range(10):
         model_dir = '../hhjung/Dense_Prop/only40/g2_layer{}/{}'.format(layer_set[3],i)
-        do_learning(model_dir, 10, layer_set[3], num_gate=3
+        do_learning(model_dir, 10, layer_set[3], num_gate=2
                 , batch_s=64, is_bottleneck=False, epochs=[150,250,350])

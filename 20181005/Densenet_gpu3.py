@@ -8,7 +8,7 @@ import torch.backends.cudnn as cudnn
 import time
 import utils
 
-os.environ["CUDA_VISIBLE_DEVICES"] = '4'
+os.environ["CUDA_VISIBLE_DEVICES"] = '3'
 
 def main(model_dir, model, dataset, batch_size=128):
     utils.default_model_dir = model_dir
@@ -22,7 +22,10 @@ def main(model_dir, model, dataset, batch_size=128):
         elif batch_size is 64:
             train_loader, test_loader = utils.cifar10_loader_64()
     elif dataset == 'cifar100':
-        train_loader, test_loader = utils.cifar100_loader()
+        if batch_size is 128:
+            train_loader, test_loader = utils.cifar100_loader()
+        elif batch_size is 64:
+            train_loader, test_loader = utils.cifar100_loader_64()
     
 
     if torch.cuda.is_available():
@@ -132,13 +135,13 @@ layer_set = [22, 28, 34, 40]
 def do_learning(model_dir, db, layer, batch_s=128, is_bottleneck=True):
     global max_result
     max_result = []
-    model_selection = DenseNet(num_classes=10, is_bottleneck=is_bottleneck, layer=layer)
+    model_selection = DenseNet(num_classes=db, is_bottleneck=is_bottleneck, layer=layer)
     dataset = 'cifar' + str(db)
     main(model_dir, model_selection, dataset, batch_s)
 
 if __name__=='__main__':
 
     for i in range(10):
-        for j in range(1,4):
-            model_dir = '../hhjung/Dense_Base/cifar10/gpu4/layer{}b128/{}'.format(layer_set[j], i)
-            do_learning(model_dir, 10, layer_set[j], batch_s=128, is_bottleneck=True)
+        for j in range(3):
+            model_dir = '../hhjung/Dense_Base/cifar100/gpu3/layer{}/{}'.format(layer_set[j], i)
+            do_learning(model_dir, 100, layer_set[j], batch_s=128, is_bottleneck=False)

@@ -2,15 +2,15 @@ import torch
 from torch.autograd import Variable
 import torch.optim as optim
 from torchvision import datasets, transforms
-from DPmodel import *
+from Pmodel import *
 import os
 import torch.backends.cudnn as cudnn
 import time
 import utils
 
-os.environ["CUDA_VISIBLE_DEVICES"] = '4'
+os.environ["CUDA_VISIBLE_DEVICES"] = '1'
 
-def main(model_dir, model, dataset, batch_size=128, epochs=[150,250,350]):
+def main(model_dir, model, dataset):
     utils.default_model_dir = model_dir
     utils.c = None
     utils.str_w = ''
@@ -19,16 +19,9 @@ def main(model_dir, model, dataset, batch_size=128, epochs=[150,250,350]):
     start_time = time.time()
 
     if dataset == 'cifar10':
-        if batch_size is 128:
-            train_loader, test_loader = utils.cifar10_loader()
-        elif batch_size is 64:
-            train_loader, test_loader = utils.cifar10_loader_64()
+        train_loader, test_loader = utils.cifar10_loader()
     elif dataset == 'cifar100':
-        if batch_size is 128:
-            train_loader, test_loader = utils.cifar100_loader()
-        elif batch_size is 64:
-            train_loader, test_loader = utils.cifar100_loader_64()
-    
+        train_loader, test_loader = utils.cifar100_loader()
 
     if torch.cuda.is_available():
         # os.environ["CUDA_VISIBLE_DEVICES"] = '0'
@@ -39,7 +32,7 @@ def main(model_dir, model, dataset, batch_size=128, epochs=[150,250,350]):
     else:
         print("NO GPU -_-;")
 
-    optimizer = optim.SGD(model.parameters(), lr=lr, momentum=0.9, weight_decay=1e-4, nesterov=True)
+    optimizer = optim.SGD(model.parameters(), lr=lr, momentum=0.9, weight_decay=1e-4)
     criterion = nn.CrossEntropyLoss().cuda()
 
     start_epoch = 0
@@ -54,10 +47,10 @@ def main(model_dir, model, dataset, batch_size=128, epochs=[150,250,350]):
 
     utils.init_learning(model.module)
 
-    for epoch in range(start_epoch, epochs[2]):
-        if epoch < epochs[0]:
+    for epoch in range(start_epoch, 165):
+        if epoch < 80:
             learning_rate = lr
-        elif epoch < epochs[1]:
+        elif epoch < 120:
             learning_rate = lr * 0.1
         else:
             learning_rate = lr * 0.01
@@ -139,7 +132,7 @@ def weight_extract(model, optimizer, criterion, train_loader, epoch):
 
         utils.c = target.view(-1,1) # batch array torch.tensor[128]
         utils.c = utils.c.type(torch.cuda.FloatTensor)
-        utils.weight_extract_densenet(model.module)
+        utils.weight_extract(model.module)
 
         for i in utils.c:
             for j in i:
@@ -185,18 +178,37 @@ def test(model, criterion, test_loader, epoch, is_main):
         print('$ TEST_S : Epoch : {} | Loss: ({:.4f}) | Acc: ({:.2f}%) ({}/{}) | Err: ({:.2f}% | Max: ({}))'
           .format(epoch, test_loss/(batch_idx+1), 100.*correct/total, correct, total, 100-100.*correct/total, max(max_result)))
 
-layer_set = [22, 28, 34, 40]
-
-def do_learning(model_dir, db, layer, num_gate=0, batch_s=128, is_bottleneck=True, epochs=[150,250,350]):
-    global max_result
-    max_result = []
-    model_selection = DenseNet(num_classes=db, num_gate=num_gate, is_bottleneck=is_bottleneck, layer=layer)
-    dataset = 'cifar' + str(db)
-    main(model_dir, model_selection, dataset, batch_s, epochs)
+layer_set = [14, 20, 32, 44, 56, 110]
 
 if __name__=='__main__':
     
-    for i in range(10):
-        model_dir = '../hhjung/Dense_Prop/only40/g4_layer{}_cifar10/{}'.format(layer_set[3],i)
-        do_learning(model_dir, 10, layer_set[3], num_gate=4
-                , batch_s=64, is_bottleneck=False, epochs=[150,250,350])
+    max_result = []
+    model_dir = '../hhjung/Proposed/cifar10/Resnet14'
+    model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[0])
+    dataset = 'cifar10'
+    main(model_dir, model_selection, dataset)
+    
+    max_result = []
+    model_dir = '../hhjung/Proposed/cifar10/Resnet20'
+    model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[1])
+    dataset = 'cifar10'
+    main(model_dir, model_selection, dataset)
+
+    max_result = []
+    model_dir = '../hhjung/Proposed/cifar10/Resnet32'
+    model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[2])
+    dataset = 'cifar10'
+    main(model_dir, model_selection, dataset)
+
+    max_result = []
+    model_dir = '../hhjung/Proposed/cifar10/Resnet44'
+    model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[3])
+    dataset = 'cifar10'
+    main(model_dir, model_selection, dataset)
+
+    max_result = []
+    model_dir = '../hhjung/Proposed/cifar10/Resnet56'
+    model_selection = ResNet(num_gate=7,num_classes=10,resnet_layer=layer_set[4])
+    dataset = 'cifar10'
+    main(model_dir, model_selection, dataset)
+

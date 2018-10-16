@@ -349,6 +349,44 @@ def cifar100_loader():
 
     return train_loader, test_loader
 
+def cifar100_loader_64():
+    batch_size = 64
+    print("cifar100 Data Loading ...")
+    transform_train = transforms.Compose([
+        transforms.RandomCrop(32, padding=4),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=(0.5071, 0.4867, 0.4408),
+                             std=(0.2675, 0.2565, 0.2761))
+    ])
+
+    transform_test = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize(mean=(0.5071, 0.4867, 0.4408),
+                             std=(0.2675, 0.2565, 0.2761))
+    ])
+
+    train_dataset = datasets.CIFAR100(root='../hhjung/cifar100_64/',
+                                     train=True,
+                                     transform=transform_train,
+                                     download=True)
+
+    test_dataset = datasets.CIFAR100(root='../hhjung/cifar100_64/',
+                                    train=False,
+                                    transform=transform_test)
+
+    train_loader = torch.utils.data.DataLoader(dataset=train_dataset,
+                                               batch_size=batch_size,
+                                               shuffle=True,
+                                               num_workers=4)
+
+    test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
+                                              batch_size=batch_size,
+                                              shuffle=False,
+                                              num_workers=4)
+
+    return train_loader, test_loader
+
 
 def cifar10_loader_64():
     batch_size = 64
