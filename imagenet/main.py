@@ -17,7 +17,14 @@ import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 import torchvision.models as models
 
+import vision_model
+import utils
+
 import imagenet_seq
+
+os.environ["IMAGENET"] = '/mnt/datasets/ILSVRC2015/Data/CLS-LOC/'
+os.environ["TENSORPACK_DATASET"] = '/mnt/wjhwang/imagenet/tensorpack/'
+os.environ['CUDA_VISIBLE_DEVICES'] = '0,1,2,3' 
 
 model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
@@ -33,7 +40,7 @@ parser.add_argument('--arch', '-a', metavar='ARCH', default='resnet18',
                         ' (default: resnet18)')
 parser.add_argument('-j', '--workers', default=4, type=int, metavar='N',
                     help='number of data loading workers (default: 4)')
-parser.add_argument('--epochs', default=90, type=int, metavar='N',
+parser.add_argument('--epochs', default=100, type=int, metavar='N',
                     help='number of total epochs to run')
 parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
                     help='manual epoch number (useful on restarts)')
@@ -87,29 +94,13 @@ def main():
 
     args.distributed = args.world_size > 1
 
-    if args.distributed:
-        dist.init_process_group(backend=args.dist_backend, init_method=args.dist_url,
-                                world_size=args.world_size)
-
     # create model
-    if args.pretrained:
-        print("=> using pre-trained model '{}'".format(args.arch))
-        model = models.__dict__[args.arch](pretrained=True)
-    else:
-        print("=> creating model '{}'".format(args.arch))
-        model = models.__dict__[args.arch]()
+    
+    print("=> creating model '{}'".format(args.arch))
+    
+    model = vision_model.resnet18()
 
-    if args.gpu is not None:
-        model = model.cuda(args.gpu)
-    elif args.distributed:
-        model.cuda()
-        model = torch.nn.parallel.DistributedDataParallel(model)
-    else:
-        if args.arch.startswith('alexnet') or args.arch.startswith('vgg'):
-            model.features = torch.nn.DataParallel(model.features)
-            model.cuda()
-        else:
-            model = torch.nn.DataParallel(model).cuda()
+    model = torch.nn.DataParallel(model).cuda()
 
     # define loss function (criterion) and optimizer
     criterion = nn.CrossEntropyLoss().cuda(args.gpu)
@@ -174,9 +165,12 @@ def main():
 	'val', batch_size=args.batch_size, shuffle=False, 
 	num_workers=args.workers, cuda=True)
 
+
     if args.evaluate:
-        validate(val_loader, model, criterion)
+        validate(val_loader, model, criterion, is_main=True)
         return
+
+    utils.init_learning(model.module)
 
     for epoch in range(args.start_epoch, args.epochs):
         if args.distributed:
@@ -184,10 +178,10 @@ def main():
         adjust_learning_rate(optimizer, epoch)
 
         # train for one epoch
-        train(train_loader, model, criterion, optimizer, epoch)
+        train(train_loader, model, criterion, optimizer, epoch, is_main=True)
 
         # evaluate on validation set
-        prec1 = validate(val_loader, model, criterion)
+        prec1 = validate(val_loader, model, criterion, is_main=True)
 
         # remember best prec@1 and save checkpoint
         is_best = prec1 > best_prec1
@@ -200,8 +194,58 @@ def main():
             'optimizer' : optimizer.state_dict(),
         }, is_best)
 
+        utils.switching_learning(model.module)
 
-def train(train_loader, model, criterion, optimizer, epoch):
+        train(train_loader, model, criterion, optimizer, epoch, is_main=False)
+
+        # evaluate on validation set
+        prec1 = validate(val_loader, model, criterion, is_main=False)
+
+        # remember best prec@1 and save checkpoint
+        is_best = prec1 > best_prec1
+        best_prec1 = max(prec1, best_prec1)
+        save_checkpoint({
+            'epoch': epoch + 1,
+            'arch': args.arch,
+            'state_dict': model.state_dict(),
+            'best_prec1': best_prec1,
+            'optimizer' : optimizer.state_dict(),
+        }, is_best)
+
+        utils.switching_learning(model.module)
+
+    weight_extract(val_loader, model, criterion)
+
+def weight_extract(val_loader, model, criterion):
+
+    # switch to evaluate mode
+    model.eval()
+
+    with torch.no_grad():
+        end = time.time()
+        for i, (input, target) in enumerate(val_loader):
+            if args.gpu is not None:
+                input = input.cuda(args.gpu, non_blocking=True)
+            target = target.cuda(args.gpu, non_blocking=True)
+
+            # compute output
+            output = model(input)
+            loss = criterion(output, target)
+
+            utils.c = target.view(-1,1) # batch array torch.tensor[256]
+            utils.c = utils.c.type(torch.cuda.FloatTensor)
+            utils.weight_extract(model.module)
+
+            for i in utils.c:
+                for j in i:
+                    utils.str_w = utils.str_w + str(j.tolist()) + ','
+                utils.str_w += '\n'
+
+            utils.save_to_csv()
+            utils.str_w = ''
+
+
+def train(train_loader, model, criterion, optimizer, epoch, is_main):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
@@ -238,19 +282,29 @@ def train(train_loader, model, criterion, optimizer, epoch):
         # measure elapsed time
         batch_time.update(time.time() - end)
         end = time.time()
-
         if i % args.print_freq == 0:
-            print('Epoch: [{0}][{1}/{2}]\t'
-                  'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
-                  'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
-                  'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
-                  'Prec@1 {top1.val:.3f} ({top1.avg:.3f})\t'
-                  'Prec@5 {top5.val:.3f} ({top5.avg:.3f})'.format(
-                   epoch, i, len(train_loader), batch_time=batch_time,
-                   data_time=data_time, loss=losses, top1=top1, top5=top5))
+            if is_main:
+                print('Epoch: [{0}][{1}/{2}]\t'
+                      'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
+                      'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
+                      'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
+                      'Prec@1 {top1.val:.3f} ({top1.avg:.3f})\t'
+                      'Prec@5 {top5.val:.3f} ({top5.avg:.3f})'.format(
+                       epoch, i, len(train_loader), batch_time=batch_time,
+                       data_time=data_time, loss=losses, top1=top1, top5=top5))
+            else:
+                print('SWITCH_Epoch: [{0}][{1}/{2}]\t'
+                      'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
+                      'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
+                      'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
+                      'Prec@1 {top1.val:.3f} ({top1.avg:.3f})\t'
+                      'Prec@5 {top5.val:.3f} ({top5.avg:.3f})'.format(
+                       epoch, i, len(train_loader), batch_time=batch_time,
+                       data_time=data_time, loss=losses, top1=top1, top5=top5))
 
 
-def validate(val_loader, model, criterion):
+
+def validate(val_loader, model, criterion, is_main):
     batch_time = AverageMeter()
     losses = AverageMeter()
     top1 = AverageMeter()
@@ -281,13 +335,22 @@ def validate(val_loader, model, criterion):
             end = time.time()
 
             if i % args.print_freq == 0:
-                print('Test: [{0}/{1}]\t'
-                      'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
-                      'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
-                      'Prec@1 {top1.val:.3f} ({top1.avg:.3f})\t'
-                      'Prec@5 {top5.val:.3f} ({top5.avg:.3f})'.format(
-                       i, len(val_loader), batch_time=batch_time, loss=losses,
-                       top1=top1, top5=top5))
+                if is_main:
+                    print('Test: [{0}/{1}]\t'
+                          'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
+                          'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
+                          'Prec@1 {top1.val:.3f} ({top1.avg:.3f})\t'
+                          'Prec@5 {top5.val:.3f} ({top5.avg:.3f})'.format(
+                           i, len(val_loader), batch_time=batch_time, loss=losses,
+                           top1=top1, top5=top5))
+                else:
+                    print('SWITCH_Test: [{0}/{1}]\t'
+                          'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
+                          'Loss {loss.val:.4f} ({loss.avg:.4f})\t'
+                          'Prec@1 {top1.val:.3f} ({top1.avg:.3f})\t'
+                          'Prec@5 {top5.val:.3f} ({top5.avg:.3f})'.format(
+                           i, len(val_loader), batch_time=batch_time, loss=losses,
+                           top1=top1, top5=top5))
 
         print(' * Prec@1 {top1.avg:.3f} Prec@5 {top5.avg:.3f}'
               .format(top1=top1, top5=top5))

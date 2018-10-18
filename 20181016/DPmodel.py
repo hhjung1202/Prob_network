@@ -87,9 +87,9 @@ class _Gate3(nn.Sequential):
         # self.init = num_init_features
         self.count = count
         self.avg_pool = nn.AdaptiveAvgPool2d(1)
-        self.fc1 = nn.Linear(channels, channels//reduction, bias=False)
+        self.fc1 = nn.Linear(channels, reduction, bias=False)
         self.relu = nn.ReLU(inplace=True)
-        self.fc2 = nn.Linear(channels//reduction, self.count, bias=False)
+        self.fc2 = nn.Linear(reduction, self.count, bias=False)
         self.fc2.weight.data.fill_(0.)
         self.sigmoid = nn.Sigmoid()
         self.p = None
@@ -124,9 +124,9 @@ class _Gate4(nn.Sequential):
         # self.init = num_init_features
         self.count = count
         self.avg_pool = nn.AdaptiveAvgPool2d(1)
-        self.fc1 = nn.Linear(channels, channels//reduction, bias=False)
+        self.fc1 = nn.Linear(channels, reduction, bias=False)
         self.relu = nn.ReLU(inplace=True)
-        self.fc2 = nn.Linear(channels//reduction, self.count, bias=False)
+        self.fc2 = nn.Linear(reduction, self.count, bias=False)
         self.fc2.weight.data.fill_(0.)
         self.sigmoid = nn.Sigmoid()
         self.p = None
@@ -161,9 +161,9 @@ class _Gate5(nn.Sequential):
         # self.init = num_init_features
         self.count = count
         self.avg_pool = nn.AdaptiveAvgPool2d(1)
-        self.fc1 = nn.Linear(channels, channels//reduction, bias=False)
+        self.fc1 = nn.Linear(channels, reduction, bias=False)
         self.relu = nn.ReLU(inplace=True)
-        self.fc2 = nn.Linear(channels//reduction, self.count, bias=False)
+        self.fc2 = nn.Linear(reduction, self.count, bias=False)
         self.fc2.weight.data.fill_(0.)
         self.sigmoid = nn.Sigmoid()
         self.p = None
