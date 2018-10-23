@@ -8,7 +8,7 @@ import torch.backends.cudnn as cudnn
 import time
 import utils
 
-os.environ["CUDA_VISIBLE_DEVICES"] = '5'
+os.environ["CUDA_VISIBLE_DEVICES"] = '4'
 
 def main(model_dir, model, dataset, batch_size=128, epochs=[150,250,350]):
     utils.default_model_dir = model_dir
@@ -28,6 +28,7 @@ def main(model_dir, model, dataset, batch_size=128, epochs=[150,250,350]):
             train_loader, test_loader = utils.cifar100_loader()
         elif batch_size is 64:
             train_loader, test_loader = utils.cifar100_loader_64()
+    
 
     if torch.cuda.is_available():
         # os.environ["CUDA_VISIBLE_DEVICES"] = '0'
@@ -196,6 +197,6 @@ def do_learning(model_dir, db, layer, num_gate=0, batch_s=128, is_bottleneck=Tru
 if __name__=='__main__':
     
     for i in range(10):
-        model_dir = '../hhjung/Dense_Prop/only40/g5_layer{}_cifar10/{}'.format(layer_set[3],i)
-        do_learning(model_dir, 10, layer_set[3], num_gate=5
-                , batch_s=64, is_bottleneck=False, epochs=[150,250,350])
+        model_dir = '../hhjung/Dense_Prop/cifar10/g4_layer{}_bottleneck_half/{}'.format(layer_set[3],i)
+        do_learning(model_dir, 10, layer_set[3], num_gate=1
+                , batch_s=64, is_bottleneck=True, epochs=[225,337,450])

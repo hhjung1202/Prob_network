@@ -8,7 +8,7 @@ import torch.backends.cudnn as cudnn
 import time
 import utils
 
-os.environ["CUDA_VISIBLE_DEVICES"] = '2'
+os.environ["CUDA_VISIBLE_DEVICES"] = '7'
 
 def main(model_dir, model, dataset, batch_size=128, epochs=[150,250,350]):
     utils.default_model_dir = model_dir
@@ -197,6 +197,6 @@ def do_learning(model_dir, db, layer, num_gate=0, batch_s=128, is_bottleneck=Tru
 if __name__=='__main__':
     
     for i in range(10):
-        model_dir = '../hhjung/Dense_Prop/only40/g2_layer{}/{}'.format(layer_set[3],i)
-        do_learning(model_dir, 10, layer_set[3], num_gate=2
-                , batch_s=64, is_bottleneck=False, epochs=[150,250,350])
+        model_dir = '../hhjung/Dense_Prop/cifar10/g7_layer{}_bottleneck_4/{}'.format(layer_set[2],i)
+        do_learning(model_dir, 10, layer_set[2], num_gate=2
+                , batch_s=64, is_bottleneck=True, epochs=[225,337,450])
