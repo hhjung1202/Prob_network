@@ -24,7 +24,7 @@ import imagenet_seq
 
 os.environ["IMAGENET"] = '/mnt/datasets/ILSVRC2015/Data/CLS-LOC/'
 os.environ["TENSORPACK_DATASET"] = '/mnt/wjhwang/imagenet/tensorpack/'
-os.environ['CUDA_VISIBLE_DEVICES'] = '0,1,2,3' 
+os.environ['CUDA_VISIBLE_DEVICES'] = '4,5,6,7' 
 
 model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
@@ -98,7 +98,7 @@ def main():
     
     print("=> creating model '{}'".format(args.arch))
     
-    model = vision_model.resnet18()
+    model = vision_model.resnet50()
 
     model = torch.nn.DataParallel(model).cuda()
 
@@ -194,27 +194,27 @@ def main():
             'optimizer' : optimizer.state_dict(),
         }, is_best)
 
-        if epoch % 3 == 2:
-            for i in range(3):
-                utils.switching_learning(model.module)
+        # if epoch % 3 == 2:
+        #     for i in range(3):
+        utils.switching_learning(model.module)
 
-                train(train_loader, model, criterion, optimizer, epoch, is_main=False)
+        train(train_loader, model, criterion, optimizer, epoch, is_main=False)
 
-                # evaluate on validation set
-                prec1 = validate(val_loader, model, criterion, is_main=False)
+        # evaluate on validation set
+        prec1 = validate(val_loader, model, criterion, is_main=False)
 
-                # remember best prec@1 and save checkpoint
-                is_best = prec1 > best_prec1
-                best_prec1 = max(prec1, best_prec1)
-                save_checkpoint({
-                    'epoch': epoch + 1,
-                    'arch': args.arch,
-                    'state_dict': model.state_dict(),
-                    'best_prec1': best_prec1,
-                    'optimizer' : optimizer.state_dict(),
-                }, is_best)
+        # remember best prec@1 and save checkpoint
+        is_best = prec1 > best_prec1
+        best_prec1 = max(prec1, best_prec1)
+        save_checkpoint({
+            'epoch': epoch + 1,
+            'arch': args.arch,
+            'state_dict': model.state_dict(),
+            'best_prec1': best_prec1,
+            'optimizer' : optimizer.state_dict(),
+        }, is_best)
 
-                utils.switching_learning(model.module)
+        utils.switching_learning(model.module)
 
 def weight_extract(val_loader, model, criterion):
 
