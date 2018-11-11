@@ -8,11 +8,11 @@ import torch.backends.cudnn as cudnn
 import time
 import utils
 
-use_gpu = '1'
+use_gpu = '0'
 
 os.environ["CUDA_VISIBLE_DEVICES"] = use_gpu
 
-def main(model_dir, model, dataset, iteration):
+def main(model_dir, model, dataset):
     utils.default_model_dir = model_dir
     utils.c = None
     utils.str_w = ''
@@ -49,45 +49,47 @@ def main(model_dir, model, dataset, iteration):
 
     utils.init_learning(model.module)
 
-    for epoch in range(start_epoch, 350):
-        if epoch < 150:
-            learning_rate = lr
-        elif epoch < 250:
-            learning_rate = lr * 0.1
-        else:
-            learning_rate = lr * 0.01
-        for param_group in optimizer.param_groups:
-            param_group['lr'] = learning_rate
+    weight_extract_test(model, criterion, test_loader)
 
-        train(model, optimizer, criterion, train_loader, epoch, True)
-        test(model, criterion, test_loader, epoch, True)
+    # for epoch in range(start_epoch, 350):
+    #     if epoch < 150:
+    #         learning_rate = lr
+    #     elif epoch < 250:
+    #         learning_rate = lr * 0.1
+    #     else:
+    #         learning_rate = lr * 0.01
+    #     for param_group in optimizer.param_groups:
+    #         param_group['lr'] = learning_rate
 
-        if epoch % iteration == iteration - 1 :
+    #     train(model, optimizer, criterion, train_loader, epoch, True)
+    #     test(model, criterion, test_loader, epoch, True)
 
-            for i in range(iteration):
-                utils.switching_learning(model.module)
-                print('switching_learning to Gate')
+    #     if epoch % iteration == iteration - 1 :
+
+    #         for i in range(iteration):
+    #             utils.switching_learning(model.module)
+    #             print('switching_learning to Gate')
                 
-                train(model, optimizer, criterion, train_loader, i, False)
-                test(model, criterion, test_loader, i, False)        
+    #             train(model, optimizer, criterion, train_loader, i, False)
+    #             test(model, criterion, test_loader, i, False)        
 
-                utils.switching_learning(model.module)
-                print('switching_learning to Gate')
+    #             utils.switching_learning(model.module)
+    #             print('switching_learning to Gate')
 
-        if epoch % 5 == 0:
-            model_filename = 'checkpoint_%03d.pth.tar' % epoch
-            utils.save_checkpoint({
-                'epoch': epoch,
-                'model': model,
-                'state_dict': model.state_dict(),
-                'optimizer': optimizer.state_dict(),
-            }, model_filename, model_dir)
+        # if epoch % 5 == 0:
+        #     model_filename = 'checkpoint_%03d.pth.tar' % epoch
+        #     utils.save_checkpoint({
+        #         'epoch': epoch,
+        #         'model': model,
+        #         'state_dict': model.state_dict(),
+        #         'optimizer': optimizer.state_dict(),
+        #     }, model_filename, model_dir)
 
-    now = time.gmtime(time.time() - start_time)
-    weight_extract(model, optimizer, criterion, train_loader, epoch)
-    utils.conv_weight_L1_printing(model.module)
+    # now = time.gmtime(time.time() - start_time)
+    # weight_extract(model, optimizer, criterion, train_loader, epoch)
+    # utils.conv_weight_L1_printing(model.module)
     
-    print('{} hours {} mins {} secs for training'.format(now.tm_hour, now.tm_min, now.tm_sec))
+    # print('{} hours {} mins {} secs for training'.format(now.tm_hour, now.tm_min, now.tm_sec))
     
 
 def train(model, optimizer, criterion, train_loader, epoch, is_main):
@@ -123,7 +125,7 @@ def train(model, optimizer, criterion, train_loader, epoch, is_main):
                   .format(epoch, batch_idx, train_loss / (batch_idx + 1), 100. * correct / total, correct, total))
 
 
-def weight_extract(model, optimizer, criterion, train_loader, epoch):
+def weight_extract(model, optimizer, criterion, train_loader):
     model.train()
     for batch_idx, (data, target) in enumerate(train_loader):
         if torch.cuda.is_available():
@@ -147,8 +149,33 @@ def weight_extract(model, optimizer, criterion, train_loader, epoch):
         utils.save_to_csv()
         utils.str_w = ''
 
-        if batch_idx % 100 == 0:
-            print('Epoch: {}'.format(epoch))
+    print('weight train extract')
+       
+def weight_extract_test(model, criterion, test_loader):
+    utils.csv_file_name = 'weight_test.csv'
+    model.eval()
+    for batch_idx, (data, target) in enumerate(test_loader):
+        if torch.cuda.is_available():
+            data, target = Variable(data.cuda()), Variable(target.cuda())
+        else:
+            data, target = Variable(data), Variable(target)
+        
+        output = model(data)
+        loss = criterion(output, target)
+
+        utils.c = target.view(-1,1) # batch array torch.tensor[128]
+        utils.c = utils.c.type(torch.cuda.FloatTensor)
+        utils.weight_extract(model.module)
+
+        for i in utils.c:
+            for j in i:
+                utils.str_w = utils.str_w + str(j.tolist()) + ','
+            utils.str_w += '\n'
+
+        utils.save_to_csv()
+        utils.str_w = ''
+
+    print('weight test extract')
 
 
 def test(model, criterion, test_loader, epoch, is_main):
@@ -186,21 +213,15 @@ def test(model, criterion, test_loader, epoch, is_main):
 layer_set = [14, 20, 32, 44, 56, 110]
 
 
-def do_learning(model_dir, db, layer, iteration):
+def do_learning(model_dir, db, layer):
     global max_result
     max_result = []
     model_selection = ResNet(num_classes=db,resnet_layer=layer)
     dataset = 'cifar' + str(db)
-    main(model_dir, model_selection, dataset, iteration)
+    main(model_dir, model_selection, dataset)
 
 if __name__=='__main__':
     global use_gpu
     
-    model_dir = '../hhjung/Proposed/iteration/gpu{}/Resnet{}/iteration{}'.format(use_gpu, layer_set[1], 3)
-    do_learning(model_dir, 10, layer_set[1], iteration=3)
-
-    model_dir = '../hhjung/Proposed/iteration/gpu{}/Resnet{}/iteration{}'.format(use_gpu, layer_set[1], 5)
-    do_learning(model_dir, 10, layer_set[1], iteration=5)
-
-        # model_dir = '../hhjung/Proposed/cifar100/Resnet110_' + str(i)
-        # do_learning(model_dir, 100, layer_set[5], num_gate=7)
+    model_dir = '../hhjung/Proposed/backup/cifar100/Resnet110'
+    do_learning(model_dir, 100, layer_set[5])

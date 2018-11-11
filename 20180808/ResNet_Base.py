@@ -35,12 +35,12 @@ transform_test = transforms.Compose([
 ])
 
 # automatically download
-train_dataset = datasets.CIFAR10(root='drive/app/cifar10/',
+train_dataset = datasets.CIFAR10(root='./cifar10/',
                                  train=True,
                                  transform=transform_train,
                                  download=True)
 
-test_dataset = datasets.CIFAR10(root='drive/app/cifar10/',
+test_dataset = datasets.CIFAR10(root='./cifar10/',
                                 train=False,
                                 transform=transform_test)
 
@@ -140,8 +140,6 @@ class ResNet(nn.Module):
         out = out.view(out.size(0), -1)
         out = self.linear(out)
         return out
-
-
 
 
 model = ResNet(BasicBlock, [2, 2, 2, 2])

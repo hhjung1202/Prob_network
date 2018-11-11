@@ -8,7 +8,7 @@ import torch.backends.cudnn as cudnn
 import time
 import utils
 
-use_gpu = '1'
+use_gpu = '4'
 
 os.environ["CUDA_VISIBLE_DEVICES"] = use_gpu
 
@@ -194,13 +194,11 @@ def do_learning(model_dir, db, layer, iteration):
     main(model_dir, model_selection, dataset, iteration)
 
 if __name__=='__main__':
-    global use_gpu
     
-    model_dir = '../hhjung/Proposed/iteration/gpu{}/Resnet{}/iteration{}'.format(use_gpu, layer_set[1], 3)
-    do_learning(model_dir, 10, layer_set[1], iteration=3)
+    for j in range(10):
 
-    model_dir = '../hhjung/Proposed/iteration/gpu{}/Resnet{}/iteration{}'.format(use_gpu, layer_set[1], 5)
-    do_learning(model_dir, 10, layer_set[1], iteration=5)
-
-        # model_dir = '../hhjung/Proposed/cifar100/Resnet110_' + str(i)
-        # do_learning(model_dir, 100, layer_set[5], num_gate=7)
+        model_dir = '../hhjung/Proposed/cifar100/Resnet{}/{}'.format(layer_set[3], j)
+        do_learning(model_dir, 100, layer_set[3], iteration=3)
+        
+        model_dir = '../hhjung/Proposed/cifar100/Resnet{}/{}'.format(layer_set[4], j)
+        do_learning(model_dir, 100, layer_set[4], iteration=3)

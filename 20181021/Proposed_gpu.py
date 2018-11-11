@@ -196,11 +196,11 @@ def do_learning(model_dir, db, layer, iteration):
 if __name__=='__main__':
     global use_gpu
     
-    model_dir = '../hhjung/Proposed/iteration/gpu{}/Resnet{}/iteration{}'.format(use_gpu, layer_set[1], 3)
-    do_learning(model_dir, 10, layer_set[1], iteration=3)
+    model_dir = '../hhjung/Proposed/iteration/gpu{}/Resnet{}/iteration{}'.format(use_gpu, layer_set[5], 3)
+    do_learning(model_dir, 10, layer_set[5], iteration=3)
 
-    model_dir = '../hhjung/Proposed/iteration/gpu{}/Resnet{}/iteration{}'.format(use_gpu, layer_set[1], 5)
-    do_learning(model_dir, 10, layer_set[1], iteration=5)
+    model_dir = '../hhjung/Proposed/iteration/gpu{}/Resnet{}/iteration{}'.format(use_gpu, layer_set[5], 5)
+    do_learning(model_dir, 10, layer_set[5], iteration=5)
 
         # model_dir = '../hhjung/Proposed/cifar100/Resnet110_' + str(i)
         # do_learning(model_dir, 100, layer_set[5], num_gate=7)
